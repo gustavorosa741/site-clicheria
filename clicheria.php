@@ -54,46 +54,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param(
-    "ssisssssssssssssssssssssssiiiiiiiiiiss",
-    $cliente,      
-    $produto,      
-    $codigo,       
-    $armario,      
-    $prateleira,   
-    $cores,        
-    $cor01,        
-    $cor02,        
-    $cor03,        
-    $cor04,        
-    $cor05,        
-    $cor06,        
-    $cor07,        
-    $cor08,        
-    $cor09,        
-    $cor10,        
-    $gravacao01,   
-    $gravacao02,   
-    $gravacao03,   
-    $gravacao04,   
-    $gravacao05,   
-    $gravacao06,   
-    $gravacao07,   
-    $gravacao08,   
-    $gravacao09,   
-    $gravacao10,   
-    $reserva01,    
-    $reserva02,    
-    $reserva03,    
-    $reserva04,    
-    $reserva05,    
-    $reserva06,    
-    $reserva07,    
-    $reserva08,    
-    $reserva09,    
-    $reserva10,    
-    $observacao,   
-    $camisa        
-);
+        "ssisssssssssssssssssssssssiiiiiiiiiiss",
+        $cliente,
+        $produto,
+        $codigo,
+        $armario,
+        $prateleira,
+        $cores,
+        $cor01,
+        $cor02,
+        $cor03,
+        $cor04,
+        $cor05,
+        $cor06,
+        $cor07,
+        $cor08,
+        $cor09,
+        $cor10,
+        $gravacao01,
+        $gravacao02,
+        $gravacao03,
+        $gravacao04,
+        $gravacao05,
+        $gravacao06,
+        $gravacao07,
+        $gravacao08,
+        $gravacao09,
+        $gravacao10,
+        $reserva01,
+        $reserva02,
+        $reserva03,
+        $reserva04,
+        $reserva05,
+        $reserva06,
+        $reserva07,
+        $reserva08,
+        $reserva09,
+        $reserva10,
+        $observacao,
+        $camisa
+    );
 
     if ($stmt->execute()) {
         echo "<script>alert('Clichê cadastrado com sucesso!');</script>";
@@ -103,9 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt->close();
     $conn->close();
-
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -471,7 +469,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <div class="form-content">
             <form id="clicheForm" method="post" action="">
-                <!-- Informações Básicas -->
                 <div class="form-section">
                     <h2 class="section-title">Informações Básicas</h2>
                     <div class="form-grid">
@@ -489,8 +486,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                         <div class="form-group">
                             <label for="cores">Nº de Cores *</label>
-                            <input type="number" id="cores" name="cores" value="10" min="1" max="10"
-                                value="10" required>
+                            <input type="number" id="cores" name="cores" value="10" min="1" max="10" value="10"
+                                required>
                         </div>
                         <div class="form-group">
                             <label for="armario">Armário</label>
@@ -511,7 +508,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
 
-                <!-- Cores em Tabela -->
                 <div class="form-section">
                     <h2 class="section-title">Cores do Clichê</h2>
                     <div class="cores-table-container">
@@ -525,21 +521,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </tr>
                             </thead>
                             <tbody id="coresTableBody">
-                                <!-- Linhas serão geradas aqui -->
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Botões -->
-                    <div class="button-group">
-                        <button type="button" class="btn-limpar" onclick="limparFormulario()">
-                            🗑️ Limpar Campos
-                        </button>
+                <div class="button-group">
+                    <button type="button" class="btn-limpar" onclick="limparFormulario()">
+                        🗑️ Limpar Campos
+                    </button>
 
-                        <button type="submit" class="btn-cadastrar">✓ Cadastrar Clichê</button>
-                    </div>
-                </form>
+                    <button type="submit" class="btn-cadastrar">✓ Cadastrar Clichê</button>
+                </div>
+            </form>
         </div>
     </div>
 
