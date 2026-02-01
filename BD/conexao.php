@@ -1,8 +1,8 @@
 <?php
 $servidor = "localhost";
 $usuario = "root";          
-$senha = "";               
-$banco = "chamados";
+$senha = "1234#abcd";               
+$banco = "clicheria";
 
 $conn = new mysqli($servidor, $usuario, $senha, $banco);
 

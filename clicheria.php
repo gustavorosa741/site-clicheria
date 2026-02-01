@@ -1,3 +1,76 @@
+<?php
+
+include './BD/conexao.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $cliente = $_POST["cliente"];
+    $produto = $_POST["produto"];
+    $codigo = $_POST["codigo"];
+    $armario = $_POST["armario"];
+    $prateleira = $_POST["prateleira"];
+    $cores = $_POST["cores"];
+    
+    $cor01 = $_POST["cor01"];
+    $cor02 = $_POST["cor02"];
+    $cor03 = $_POST["cor03"];
+    $cor04 = $_POST["cor04"];
+    $cor05 = $_POST["cor05"];
+    $cor06 = $_POST["cor06"];
+    $cor07 = $_POST["cor07"];
+    $cor08 = $_POST["cor08"];
+    $cor09 = $_POST["cor09"];
+    $cor10 = $_POST["cor10"];
+
+    $gravacao01 = $_POST["gravacao01"];
+    $gravacao02 = $_POST["gravacao02"];
+    $gravacao03 = $_POST["gravacao03"];
+    $gravacao04 = $_POST["gravacao04"];
+    $gravacao05 = $_POST["gravacao05"];
+    $gravacao06 = $_POST["gravacao06"];
+    $gravacao07 = $_POST["gravacao07"];
+    $gravacao08 = $_POST["gravacao08"];
+    $gravacao09 = $_POST["gravacao09"];
+    $gravacao10 = $_POST["gravacao10"];
+
+    $reserva01 = $_POST["reserva01"];
+    $reserva02 = $_POST["reserva02"];
+    $reserva03 = $_POST["reserva03"];
+    $reserva04 = $_POST["reserva04"];
+    $reserva05 = $_POST["reserva05"];
+    $reserva06 = $_POST["reserva06"];
+    $reserva07 = $_POST["reserva07"];
+    $reserva08 = $_POST["reserva08"];
+    $reserva09 = $_POST["reserva09"];
+    $reserva10 = $_POST["reserva10"];
+
+    $observacao = $_POST["observacao"];
+    $camisa = $_POST["camisa"];
+
+    $sql = "INSERT INTO clicheria (cliente, produto, codigo, armario, prateleira, cores, cor01, cor02, cor03, cor04, cor05, cor06, cor07, cor08, cor09, cor10, 
+    gravacao01, gravacao02, gravacao03, gravacao04, gravacao05, gravacao06, gravacao07, gravacao08, gravacao09, gravacao10, 
+    reserva01, reserva02, reserva03, reserva04, reserva05, reserva06, reserva07, reserva08, reserva09, reserva10, observacao, camisa) 
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssiisssssssssssssssssssssssssssssssss", $cliente, $produto, $codigo, $armario, $prateleira, $cores, 
+    $cor01, $cor02, $cor03, $cor04, $cor05, $cor06, $cor07, $cor08, $cor09, $cor10, 
+    $gravacao01, $gravacao02, $gravacao03, $gravacao04, $gravacao05, $gravacao06, $gravacao07, $gravacao08, $gravacao09, $gravacao10, 
+    $reserva01, $reserva02, $reserva03, $reserva04, $reserva05, $reserva06, $reserva07, $reserva08, $reserva09, $reserva10, $observacao, $camisa);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Clichê cadastrado com sucesso!'); window.location.href = 'clicheria.php';</script>";
+    } else {
+        echo "<script>alert('Erro ao cadastrar clichê: " . $stmt->error . "');</script>";
+    }
+
+    $stmt->close();
+    $conn->close();
+
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -422,13 +495,13 @@
                 </div>
 
                 <!-- Botões -->
+            <form method="post" action=""></form>
                 <div class="button-group">
                     <button type="button" class="btn-limpar" onclick="limparFormulario()">
                         🗑️ Limpar Campos
                     </button>
-                    <button type="submit" class="btn-cadastrar">
-                        ✓ Cadastrar Clichê
-                    </button>
+                
+                    <button type="submit" class="btn-cadastrar">✓ Cadastrar Clichê</button>
                 </div>
             </form>
         </div>
@@ -488,10 +561,6 @@
                 }
             }
 
-            console.log('Dados do cadastro:', dados);
-            alert('Clichê cadastrado com sucesso!\n\nConfira os dados no console (F12)');
-
-            // Aqui você pode adicionar a lógica para enviar os dados para um servidor
         });
 
         // Inicializar tabela de cores ao carregar a página

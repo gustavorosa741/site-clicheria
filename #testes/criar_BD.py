@@ -56,7 +56,7 @@ class Chamado(Base):
     reserva08 = Column(String(5), nullable=False)
     reserva09 = Column(String(5), nullable=False)
     reserva10 = Column(String(5), nullable=False)
-    observação = Column(String(200), nullable=False)
+    observacao = Column(String(200), nullable=False)
     camisa = Column(String(200), nullable=False)
     descare = Column(Boolean, nullable=False)
 
