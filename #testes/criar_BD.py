@@ -18,7 +18,7 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 class Chamado(Base):
-    __tablename__ = 'clicheria'
+    __tablename__ = 'tab_clicheria'
     id_cliche = Column(Integer, primary_key=True)
     cliente = Column(String(200), nullable=False)
     produto = Column(String(200), nullable=False)
@@ -46,19 +46,18 @@ class Chamado(Base):
     gravacao08 = Column(Date, nullable=False)
     gravacao09 = Column(Date, nullable=False)
     gravacao10 = Column(Date, nullable=False)
-    reserva01 = Column(String(5), nullable=False)
-    reserva02 = Column(String(5), nullable=False)
-    reserva03 = Column(String(5), nullable=False)
-    reserva04 = Column(String(5), nullable=False)
-    reserva05 = Column(String(5), nullable=False)
-    reserva06 = Column(String(5), nullable=False)
-    reserva07 = Column(String(5), nullable=False)
-    reserva08 = Column(String(5), nullable=False)
-    reserva09 = Column(String(5), nullable=False)
-    reserva10 = Column(String(5), nullable=False)
+    reserva01 = Column(Boolean, nullable=False)
+    reserva02 = Column(Boolean, nullable=False)
+    reserva03 = Column(Boolean, nullable=False)
+    reserva04 = Column(Boolean, nullable=False)
+    reserva05 = Column(Boolean, nullable=False)
+    reserva06 = Column(Boolean, nullable=False)
+    reserva07 = Column(Boolean, nullable=False)
+    reserva08 = Column(Boolean, nullable=False)
+    reserva09 = Column(Boolean, nullable=False)
+    reserva10 = Column(Boolean, nullable=False)
     observacao = Column(String(200), nullable=False)
     camisa = Column(String(200), nullable=False)
-    descare = Column(Boolean, nullable=False)
 
 
 

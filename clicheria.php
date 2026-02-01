@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $armario = $_POST["armario"];
     $prateleira = $_POST["prateleira"];
     $cores = $_POST["cores"];
-    
+
     $cor01 = $_POST["cor01"];
     $cor02 = $_POST["cor02"];
     $cor03 = $_POST["cor03"];
@@ -33,33 +33,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $gravacao09 = $_POST["gravacao09"];
     $gravacao10 = $_POST["gravacao10"];
 
-    $reserva01 = $_POST["reserva01"];
-    $reserva02 = $_POST["reserva02"];
-    $reserva03 = $_POST["reserva03"];
-    $reserva04 = $_POST["reserva04"];
-    $reserva05 = $_POST["reserva05"];
-    $reserva06 = $_POST["reserva06"];
-    $reserva07 = $_POST["reserva07"];
-    $reserva08 = $_POST["reserva08"];
-    $reserva09 = $_POST["reserva09"];
-    $reserva10 = $_POST["reserva10"];
+    $reserva01 = isset($_POST["reserva01"]) ? 1 : 0;
+    $reserva02 = isset($_POST["reserva02"]) ? 1 : 0;
+    $reserva03 = isset($_POST["reserva03"]) ? 1 : 0;
+    $reserva04 = isset($_POST["reserva04"]) ? 1 : 0;
+    $reserva05 = isset($_POST["reserva05"]) ? 1 : 0;
+    $reserva06 = isset($_POST["reserva06"]) ? 1 : 0;
+    $reserva07 = isset($_POST["reserva07"]) ? 1 : 0;
+    $reserva08 = isset($_POST["reserva08"]) ? 1 : 0;
+    $reserva09 = isset($_POST["reserva09"]) ? 1 : 0;
+    $reserva10 = isset($_POST["reserva10"]) ? 1 : 0;
 
     $observacao = $_POST["observacao"];
     $camisa = $_POST["camisa"];
 
-    $sql = "INSERT INTO clicheria (cliente, produto, codigo, armario, prateleira, cores, cor01, cor02, cor03, cor04, cor05, cor06, cor07, cor08, cor09, cor10, 
+    $sql = "INSERT INTO tab_clicheria (cliente, produto, codigo, armario, prateleira, cores, cor01, cor02, cor03, cor04, cor05, cor06, cor07, cor08, cor09, cor10, 
     gravacao01, gravacao02, gravacao03, gravacao04, gravacao05, gravacao06, gravacao07, gravacao08, gravacao09, gravacao10, 
     reserva01, reserva02, reserva03, reserva04, reserva05, reserva06, reserva07, reserva08, reserva09, reserva10, observacao, camisa) 
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssiisssssssssssssssssssssssssssssssss", $cliente, $produto, $codigo, $armario, $prateleira, $cores, 
-    $cor01, $cor02, $cor03, $cor04, $cor05, $cor06, $cor07, $cor08, $cor09, $cor10, 
-    $gravacao01, $gravacao02, $gravacao03, $gravacao04, $gravacao05, $gravacao06, $gravacao07, $gravacao08, $gravacao09, $gravacao10, 
-    $reserva01, $reserva02, $reserva03, $reserva04, $reserva05, $reserva06, $reserva07, $reserva08, $reserva09, $reserva10, $observacao, $camisa);
+    $stmt->bind_param(
+    "ssisssssssssssssssssssssssiiiiiiiiiiss",
+    $cliente,      
+    $produto,      
+    $codigo,       
+    $armario,      
+    $prateleira,   
+    $cores,        
+    $cor01,        
+    $cor02,        
+    $cor03,        
+    $cor04,        
+    $cor05,        
+    $cor06,        
+    $cor07,        
+    $cor08,        
+    $cor09,        
+    $cor10,        
+    $gravacao01,   
+    $gravacao02,   
+    $gravacao03,   
+    $gravacao04,   
+    $gravacao05,   
+    $gravacao06,   
+    $gravacao07,   
+    $gravacao08,   
+    $gravacao09,   
+    $gravacao10,   
+    $reserva01,    
+    $reserva02,    
+    $reserva03,    
+    $reserva04,    
+    $reserva05,    
+    $reserva06,    
+    $reserva07,    
+    $reserva08,    
+    $reserva09,    
+    $reserva10,    
+    $observacao,   
+    $camisa        
+);
 
     if ($stmt->execute()) {
-        echo "<script>alert('Clichê cadastrado com sucesso!'); window.location.href = 'clicheria.php';</script>";
+        echo "<script>alert('Clichê cadastrado com sucesso!');</script>";
     } else {
         echo "<script>alert('Erro ao cadastrar clichê: " . $stmt->error . "');</script>";
     }
@@ -433,43 +470,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
 
         <div class="form-content">
-            <form id="clicheForm">
+            <form id="clicheForm" method="post" action="">
                 <!-- Informações Básicas -->
                 <div class="form-section">
                     <h2 class="section-title">Informações Básicas</h2>
                     <div class="form-grid">
                         <div class="form-group span-2">
                             <label for="cliente">Cliente *</label>
-                            <input type="text" id="cliente" name="cliente" required>
+                            <input type="text" id="cliente" name="cliente" value="teste" required>
                         </div>
                         <div class="form-group span-2">
                             <label for="produto">Produto *</label>
-                            <input type="text" id="produto" name="produto" required>
+                            <input type="text" id="produto" name="produto" value="teste" required>
                         </div>
                         <div class="form-group">
                             <label for="codigo">Código *</label>
-                            <input type="text" id="codigo" name="codigo" required>
+                            <input type="text" id="codigo" name="codigo" value="1" required>
                         </div>
                         <div class="form-group">
-                            <label for="numeroCores">Nº de Cores *</label>
-                            <input type="number" id="numeroCores" name="numeroCores" min="1" max="10" value="10"
-                                required>
+                            <label for="cores">Nº de Cores *</label>
+                            <input type="number" id="cores" name="cores" value="10" min="1" max="10"
+                                value="10" required>
                         </div>
                         <div class="form-group">
                             <label for="armario">Armário</label>
-                            <input type="text" id="armario" name="armario">
+                            <input type="text" id="armario" name="armario" value="1">
                         </div>
                         <div class="form-group">
                             <label for="prateleira">Prateleira</label>
-                            <input type="text" id="prateleira" name="prateleira">
+                            <input type="text" id="prateleira" name="prateleira" value="12">
                         </div>
                         <div class="form-group span-2">
                             <label for="camisa">Camisa</label>
-                            <input type="text" id="camisa" name="camisa">
+                            <input type="text" id="camisa" name="camisa" value="teste">
                         </div>
                         <div class="form-group span-2">
                             <label for="observacoes">Observações</label>
-                            <textarea id="observacoes" name="observacoes" rows="2"></textarea>
+                            <textarea id="observacoes" name="observacao" rows="2"></textarea>
                         </div>
                     </div>
                 </div>
@@ -495,15 +532,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
 
                 <!-- Botões -->
-            <form method="post" action=""></form>
-                <div class="button-group">
-                    <button type="button" class="btn-limpar" onclick="limparFormulario()">
-                        🗑️ Limpar Campos
-                    </button>
-                
-                    <button type="submit" class="btn-cadastrar">✓ Cadastrar Clichê</button>
-                </div>
-            </form>
+                    <div class="button-group">
+                        <button type="button" class="btn-limpar" onclick="limparFormulario()">
+                            🗑️ Limpar Campos
+                        </button>
+
+                        <button type="submit" class="btn-cadastrar">✓ Cadastrar Clichê</button>
+                    </div>
+                </form>
         </div>
     </div>
 
@@ -514,19 +550,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             tbody.innerHTML = '';
 
             for (let i = 1; i <= 10; i++) {
+                const corNum = i.toString().padStart(2, '0');
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="cor-numero" data-label="">Cor ${i.toString().padStart(2, '0')}</td>
-                    <td data-label="Nome da Cor">
-                        <input type="text" id="cor${i}" name="cor${i}" placeholder="Nome da cor">
-                    </td>
-                    <td data-label="Data de Gravação">
-                        <input type="date" id="dataCor${i}" name="dataCor${i}">
-                    </td>
-                    <td class="checkbox-cell" data-label="Reserva">
-                        <input type="checkbox" id="reservaCor${i}" name="reservaCor${i}">
-                    </td>
-                `;
+            <td class="cor-numero" data-label="">Cor ${corNum}</td>
+            <td data-label="Nome da Cor">
+                <input type="text" id="cor${corNum}" name="cor${corNum}" value="teste" placeholder="Nome da cor">
+            </td>
+            <td data-label="Data de Gravação">
+                <input type="text" id="gravacao${corNum}" name="gravacao${corNum}" value = "01/01/2025" placeholder="dd/mm/aaaa">
+            </td>
+            <td class="checkbox-cell" data-label="Reserva">
+                <input type="checkbox" id="reserva${corNum}" name="reserva${corNum}" value="0">
+            </td>
+        `;
                 tbody.appendChild(tr);
             }
         }
@@ -537,31 +574,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 document.getElementById('clicheForm').reset();
             }
         }
-
-        // Processar envio do formulário
-        document.getElementById('clicheForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const formData = new FormData(this);
-            const dados = {};
-
-            for (let [key, value] of formData.entries()) {
-                if (key.startsWith('reservaCor')) {
-                    dados[key] = true;
-                } else {
-                    dados[key] = value;
-                }
-            }
-
-            // Adicionar checkboxes não marcados
-            for (let i = 1; i <= 10; i++) {
-                const checkboxName = `reservaCor${i}`;
-                if (!dados[checkboxName]) {
-                    dados[checkboxName] = false;
-                }
-            }
-
-        });
 
         // Inicializar tabela de cores ao carregar a página
         window.addEventListener('DOMContentLoaded', gerarTabelaCores);
