@@ -1,6 +1,6 @@
 <?php
 
-include './BD/conexao.php';
+include '../BD/conexao.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -11,27 +11,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $prateleira = $_POST["prateleira"];
     $cores = $_POST["cores"];
 
-    $cor01 = $_POST["cor01"];
-    $cor02 = $_POST["cor02"];
-    $cor03 = $_POST["cor03"];
-    $cor04 = $_POST["cor04"];
-    $cor05 = $_POST["cor05"];
-    $cor06 = $_POST["cor06"];
-    $cor07 = $_POST["cor07"];
-    $cor08 = $_POST["cor08"];
-    $cor09 = $_POST["cor09"];
-    $cor10 = $_POST["cor10"];
+    $cor01 = $_POST["cor01"] ?? null;
+    $cor02 = $_POST['cor02'] ?? null;
+    $cor03 = $_POST["cor03"] ?? null;
+    $cor04 = $_POST["cor04"] ?? null;
+    $cor05 = $_POST["cor05"] ?? null;
+    $cor06 = $_POST["cor06"] ?? null;
+    $cor07 = $_POST["cor07"] ?? null;
+    $cor08 = $_POST["cor08"] ?? null;
+    $cor09 = $_POST["cor09"] ?? null;
+    $cor10 = $_POST["cor10"] ?? null;
 
-    $gravacao01 = $_POST["gravacao01"];
-    $gravacao02 = $_POST["gravacao02"];
-    $gravacao03 = $_POST["gravacao03"];
-    $gravacao04 = $_POST["gravacao04"];
-    $gravacao05 = $_POST["gravacao05"];
-    $gravacao06 = $_POST["gravacao06"];
-    $gravacao07 = $_POST["gravacao07"];
-    $gravacao08 = $_POST["gravacao08"];
-    $gravacao09 = $_POST["gravacao09"];
-    $gravacao10 = $_POST["gravacao10"];
+    $gravacao01 = $_POST["gravacao01"] ?? null;
+    $gravacao02 = $_POST["gravacao02"] ?? null;
+    $gravacao03 = $_POST["gravacao03"] ?? null;
+    $gravacao04 = $_POST["gravacao04"] ?? null;
+    $gravacao05 = $_POST["gravacao05"] ?? null;
+    $gravacao06 = $_POST["gravacao06"] ?? null;
+    $gravacao07 = $_POST["gravacao07"] ?? null;
+    $gravacao08 = $_POST["gravacao08"] ?? null;
+    $gravacao09 = $_POST["gravacao09"] ?? null;
+    $gravacao10 = $_POST["gravacao10"] ?? null;
 
     $reserva01 = isset($_POST["reserva01"]) ? 1 : 0;
     $reserva02 = isset($_POST["reserva02"]) ? 1 : 0;
@@ -96,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     );
 
     if ($stmt->execute()) {
-        echo "<script>alert('Clichê cadastrado com sucesso!');</script>";
+        echo "<script>alert('Clichê cadastrado com sucesso!'); window.location.href='./principal.php';</script>";
     } else {
         echo "<script>alert('Erro ao cadastrar clichê: " . $stmt->error . "');</script>";
     }
@@ -145,6 +145,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             padding: 20px 30px;
             text-align: center;
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
         .header h1 {
@@ -152,6 +156,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2px;
+        }
+
+        .header button {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 30px;
+            color: #2196f3;
+        }
+
+        .header button:hover {
+            background: linear-gradient(135deg, #f5e8e8, #ffffff);
+            transform: translateX(5px);
         }
 
         .form-content {
@@ -464,6 +481,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="container">
         <div class="header">
+            <button onclick="window.location.href='../principal.php'">VOLTAR</button>
             <h1>📋 Cadastro de Clichês</h1>
         </div>
 
@@ -482,24 +500,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                         <div class="form-group">
                             <label for="codigo">Código *</label>
-                            <input type="text" id="codigo" name="codigo" value="1" required>
+                            <input type="number" pattern="[0-9]+" id="codigo" name="codigo" value="1" required>
                         </div>
                         <div class="form-group">
                             <label for="cores">Nº de Cores *</label>
-                            <input type="number" id="cores" name="cores" value="10" min="1" max="10" value="10"
-                                required>
+                            <input type="number" id="cores" name="cores" value="10" min="1" max="10"
+                                oninput="validarNumero(this)" required>
                         </div>
                         <div class="form-group">
                             <label for="armario">Armário</label>
-                            <input type="text" id="armario" name="armario" value="1">
+                            <input type="text" id="armario" name="armario" value="1" required>
                         </div>
                         <div class="form-group">
                             <label for="prateleira">Prateleira</label>
-                            <input type="text" id="prateleira" name="prateleira" value="12">
+                            <input type="text" id="prateleira" name="prateleira" value="12" required>
                         </div>
                         <div class="form-group span-2">
                             <label for="camisa">Camisa</label>
-                            <input type="text" id="camisa" name="camisa" value="teste">
+                            <input type="text" id="camisa" name="camisa" value="teste" required>
                         </div>
                         <div class="form-group span-2">
                             <label for="observacoes">Observações</label>
@@ -563,6 +581,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         `;
                 tbody.appendChild(tr);
             }
+        }
+        function validarNumero(input) {
+            let valor = parseInt(input.value);
+
+            if (valor > 10) {
+                input.value = 10;
+            } else if (valor < 1) {
+                input.value = 1;
+            }
+
+            // Atualiza a tabela quando mudar
+            gerarTabelaCores();
         }
         // Chama a função quando o valor do input mudar
         document.getElementById('cores').addEventListener('change', gerarTabelaCores);

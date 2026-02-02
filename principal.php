@@ -12,11 +12,8 @@
 <body>
     <div class="header">
         <div class="logo-area">
-            <div class="logo-placeholder">C</div>
+            <div class="logo-placeholder">P</div>
             <div class="company-name">Plasc</div>
-        </div>
-        <div class="user-info">
-            Bem-vindo, Usuário | <strong>Sistema de Gestão</strong>
         </div>
     </div>
 
@@ -36,7 +33,7 @@
                     </div>
                     <ul class="menu-list">
                         <li class="menu-item">
-                            <button class="menu-button" data-page="clicheria.php">
+                            <button class="menu-button" data-page="clicheria/cad_clicheria.php">
                                 Cadastro Cliche
                             </button>
                         </li>   
