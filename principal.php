@@ -23,7 +23,7 @@
     <div class="container">
         <div class="main-content">
             <div class="welcome-section">
-                <h1>Sistema de Gestão Integrado</h1>
+                <h1>Sistema de Gestão Clicheria</h1>
                 <p>Escolha o setor para acessar os cadastros e consultas</p>
             </div>
 
@@ -37,7 +37,7 @@
                     <ul class="menu-list">
                         <li class="menu-item">
                             <button class="menu-button" data-page="clicheria.php">
-                                Clicheria
+                                Cadastro Cliche
                             </button>
                         </li>   
                         <li class="menu-item">

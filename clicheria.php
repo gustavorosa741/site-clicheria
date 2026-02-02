@@ -543,7 +543,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             const tbody = document.getElementById('coresTableBody');
             tbody.innerHTML = '';
 
-            for (let i = 1; i <= 10; i++) {
+            // Captura o valor do input de número de cores
+            const numCores = parseInt(document.getElementById('cores').value) || 10;
+
+            for (let i = 1; i <= numCores; i++) {
                 const corNum = i.toString().padStart(2, '0');
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -552,7 +555,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="text" id="cor${corNum}" name="cor${corNum}" value="teste" placeholder="Nome da cor">
             </td>
             <td data-label="Data de Gravação">
-                <input type="text" id="gravacao${corNum}" name="gravacao${corNum}" value = "01/01/2025" placeholder="dd/mm/aaaa">
+                <input type="date" id="gravacao${corNum}" name="gravacao${corNum}" value="2025-01-01" placeholder="dd/mm/aaaa">
             </td>
             <td class="checkbox-cell" data-label="Reserva">
                 <input type="checkbox" id="reserva${corNum}" name="reserva${corNum}" value="0">
@@ -561,6 +564,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 tbody.appendChild(tr);
             }
         }
+        // Chama a função quando o valor do input mudar
+        document.getElementById('cores').addEventListener('change', gerarTabelaCores);
+
+        // Gera a tabela inicial ao carregar a página
+        gerarTabelaCores();
 
         // Limpar formulário
         function limparFormulario() {
