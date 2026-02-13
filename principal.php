@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/css/style.css">
     <title>Sistema de Gestão - Plasc</title>
-
 </head>
 
 <body>
@@ -29,7 +28,7 @@
                 <div class="sector-card">
                     <div class="sector-header">
                         <div class="sector-icon">🖨️</div>
-                        <h2 class="sector-title">Clicheria - Colagem</h2>
+                        <h2 class="sector-title">Clicheria</h2>
                     </div>
                     <ul class="menu-list">
                         <li class="menu-item">
@@ -38,10 +37,20 @@
                             </button>
                         </li>   
                         <li class="menu-item">
-                            <button class="menu-button" onclick="navigateTo('saida-cliche')">
-                                Relatorio Clicheria
+                            <button class="menu-button" data-page="clicheria/listar_cliches.php">
+                                Relatório Clicheria
                             </button>
                         </li>
+                    </ul>
+                </div>
+
+                <!-- Setor Colagem -->
+                <div class="sector-card">
+                    <div class="sector-header">
+                        <div class="sector-icon">📋</div>
+                        <h2 class="sector-title">Colagem</h2>
+                    </div>
+                    <ul class="menu-list">
                         <li class="menu-item">
                             <button class="menu-button" onclick="navigateTo('retorno-cliche')">
                                 Colagem
@@ -49,7 +58,7 @@
                         </li>
                         <li class="menu-item">
                             <button class="menu-button" onclick="navigateTo('ocorrencia-grafica')">
-                                Relatorio Colagem
+                                Relatório Colagem
                             </button>
                         </li>
                     </ul>
@@ -64,15 +73,14 @@
     </div>
 
     <script>
-
         document.querySelectorAll('.menu-button').forEach(button => {
-        button.addEventListener('click', function() {
-            const page = this.getAttribute('data-page');
-            if (page) {
-                window.location.href = page;
-            }
+            button.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                if (page) {
+                    window.location.href = page;
+                }
+            });
         });
-    });
 
         // Adiciona efeito de entrada
         document.addEventListener('DOMContentLoaded', function () {

@@ -96,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     );
 
     if ($stmt->execute()) {
-        echo "<script>alert('Clichê cadastrado com sucesso!'); window.location.href='./principal.php';</script>";
+        echo "<script>alert('Clichê cadastrado com sucesso!'); window.location.href='../principal.php';</script>";
     } else {
         echo "<script>alert('Erro ao cadastrar clichê: " . $stmt->error . "');</script>";
     }
@@ -164,11 +164,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             position: absolute;
             left: 30px;
             color: #2196f3;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            gap: 8px;
         }
 
         .header button:hover {
-            background: linear-gradient(135deg, #f5e8e8, #ffffff);
-            transform: translateX(5px);
+            background: white;
+            color: #1976d2;
+            transform: translateX(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .form-content {

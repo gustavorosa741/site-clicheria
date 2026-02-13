@@ -17,7 +17,7 @@ Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
 
-class Chamado(Base):
+class CadastroClicheria(Base):
     __tablename__ = 'tab_clicheria'
     id_cliche = Column(Integer, primary_key=True)
     cliente = Column(String(200), nullable=False)
