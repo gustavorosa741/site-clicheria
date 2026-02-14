@@ -18,7 +18,7 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 class CadastroClicheria(Base):
-    __tablename__ = 'tab_clicheria'
+    __tablename__ = 'tab_nova_clicheria'
     id_cliche = Column(Integer, primary_key=True)
     cliente = Column(String(200), nullable=False)
     produto = Column(String(200), nullable=False)
@@ -58,6 +58,23 @@ class CadastroClicheria(Base):
     reserva10 = Column(Boolean)
     observacao = Column(String(200), nullable=False)
     camisa = Column(String(200), nullable=False)
+
+
+
+class CadastroColagem(Base):
+    __tablename__ = "tab_nova_colagem"
+    id_clolagem  = Column(Integer, Primarykey=True)
+    codigo = Column(Integer, nullable=False)
+    cores =Column(Integer, nullable=False)
+    camisa= Column(Integer, nullable=False)
+    valor_eng = Column(String, nullable=False)
+    valor_pon = Column(String, nullable=False)
+    familia = Column(String, nullable=False)
+    cameron = Column(String, nullable=False)
+    engrenagem = Column(String, nullable=False)
+    ponteira = Column (String, nullable=False)
+    colador = Column(String, nullable=False)
+    datacolagem =Column(Date, nullable=False)
 
 
 
