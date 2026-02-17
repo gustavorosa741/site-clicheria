@@ -52,12 +52,12 @@
                     </div>
                     <ul class="menu-list">
                         <li class="menu-item">
-                            <button class="menu-button" onclick="navigateTo('retorno-cliche')">
-                                Colagem
+                            <button class="menu-button" data-page="colagem/cad_colagem.php">
+                                Cadastro Colagem
                             </button>
                         </li>
                         <li class="menu-item">
-                            <button class="menu-button" onclick="navigateTo('ocorrencia-grafica')">
+                            <button class="menu-button" data-page="colagem/listar_colagens.php">
                                 Relatório Colagem
                             </button>
                         </li>

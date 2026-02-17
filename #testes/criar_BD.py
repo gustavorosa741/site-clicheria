@@ -17,7 +17,7 @@ Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
 
-class CadastroClicheria(Base):
+'''class CadastroClicheria(Base):
     __tablename__ = 'tab_nova_clicheria'
     id_cliche = Column(Integer, primary_key=True)
     cliente = Column(String(200), nullable=False)
@@ -57,28 +57,28 @@ class CadastroClicheria(Base):
     reserva09 = Column(Boolean)
     reserva10 = Column(Boolean)
     observacao = Column(String(200), nullable=False)
-    camisa = Column(String(200), nullable=False)
+    camisa = Column(String(200), nullable=False)'''
 
 
 
 class CadastroColagem(Base):
-    __tablename__ = "tab_nova_colagem"
-    id_colagem  = Column(Integer, Primarykey=True)
-    produto = Column(String, nullable=False)
+    __tablename__ = 'tab_nova_colagem'
+    id_colagem = Column(Integer, primary_key=True)
+    produto = Column(String(200), nullable=False)
     codigo = Column(Integer, nullable=False)
     camisa= Column(Integer, nullable=False)
     valor_eng = Column(Integer, nullable=False)
-    maquina = Column(String, nullable=False)
+    maquina = Column(String(200), nullable=False)
     valor_pon = Column(Integer, nullable=False)
-    familia = Column(String, nullable=False)
+    familia = Column(String(200), nullable=False)
     cameron = Column(Boolean, nullable=False)
     distanciaCameron = Column(Integer, nullable=False)
     engcameron = Column(Integer, nullable=False)
-    maquinaCameron = Column(String)
+    maquinaCameron = Column(String(200))
     ponCameron = Column(Integer)
     distanciaCameron2 = Column(Integer, nullable=False)
-    observacoes = Column(String)
-    colador = Column(String, nullable=False)
+    observacoes = Column(String(200))
+    colador = Column(String(200), nullable=False)
     datacolagem = Column (Date)
 
     cores =Column(Integer, nullable=False)
