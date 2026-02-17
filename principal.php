@@ -33,12 +33,12 @@
                     <ul class="menu-list">
                         <li class="menu-item">
                             <button class="menu-button" data-page="clicheria/cad_clicheria.php">
-                                Cadastro Cliche
+                                Cadastro Clichê
                             </button>
                         </li>   
                         <li class="menu-item">
                             <button class="menu-button" data-page="clicheria/listar_cliches.php">
-                                Relatório Clicheria
+                                Clichês Cadastrados
                             </button>
                         </li>
                     </ul>
