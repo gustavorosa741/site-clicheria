@@ -82,7 +82,6 @@
             });
         });
 
-        // Adiciona efeito de entrada
         document.addEventListener('DOMContentLoaded', function () {
             const cards = document.querySelectorAll('.sector-card');
             cards.forEach((card, index) => {

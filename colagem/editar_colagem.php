@@ -147,7 +147,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
 }
 
-// Buscar dados da colagem
 $sql = "SELECT * FROM tab_nova_colagem WHERE id_colagem = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
