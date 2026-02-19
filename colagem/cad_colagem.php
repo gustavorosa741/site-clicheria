@@ -451,6 +451,95 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #f44336;
         }
 
+        .validation-section {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .validation-title {
+            color: #e65100;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .codigo-validation-group {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+            margin-bottom: 15px;
+        }
+
+        .codigo-input-wrapper {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .btn-verificar {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #ff9800 0%, #fb8c00 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            height: 42px;
+        }
+
+        .btn-verificar:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn-verificar:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .validation-message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .validation-message.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+        }
+
+        .validation-message.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #f44336;
+        }
+
+        .validation-message.warning {
+            background: #fff3e0;
+            color: #e65100;
+            border: 2px solid #ff9800;
+        }
+
+        .validation-message.show {
+            display: flex;
+        }
+
+
+
         /* Mobile Layout */
         @media (max-width: 768px) {
             body {
@@ -540,11 +629,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             button {
                 width: 100%;
             }
+
+            .codigo-validation-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .codigo-input-wrapper {
+                max-width: 100%;
+            }
+
+            .btn-verificar {
+                width: 100%;
+            }
+
         }
 
         @media (min-width: 769px) and (max-width: 1366px) {
             .form-grid {
                 grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #ff9800;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
             }
         }
     </style>
@@ -560,161 +683,181 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="form-content">
             <form id="colagemForm" method="POST" action="">
                 <input type="hidden" name="cores" id="coresInput" value="1">
+                <div class="validation-section">
+                    <h2 class="validation-title">
+                        🔍 Validação de Código
+                    </h2>
+                    <p style="color: #666; margin-bottom: 15px; font-size: 14px;">
+                        Digite o código do clichê cadastrado e clique em "Verificar" para continuar o cadastro da
+                        colagem.
+                    </p>
 
-                <!-- Informações Básicas -->
-                <div class="form-section">
-                    <h2 class="section-title">Informações Básicas</h2>
-                    <div class="form-grid">
-                        <div class="form-group span-2">
-                            <label for="produto">Produto <span class="required">*</span></label>
-                            <input type="text" id="produto" name="produto" required>
+                    <div class="codigo-validation-group">
+                        <div class="codigo-input-wrapper">
+                            <label for="codigo">Código do Clichê *</label>
+                            <input type="number" id="codigo" name="codigo" placeholder="Digite o código" required>
                         </div>
-                        <div class="form-group">
-                            <label for="codigo">Código <span class="required">*</span></label>
-                            <input type="number" id="codigo" name="codigo" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="camisa">Camisa <span class="required">*</span></label>
-                            <input type="number" id="camisa" name="camisa" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="familia">Família <span class="required">*</span></label>
-                            <select id="familia" name="familia" required>
-                                <option value="">Selecione...</option>
-                                <option value="Família A">Família A</option>
-                                <option value="Família B">Família B</option>
-                                <option value="Família C">Família C</option>
-                                <option value="Família D">Família D</option>
-                                <option value="Família E">Família E</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="colador">Colador <span class="required">*</span></label>
-                            <select id="colador" name="colador" required>
-                                <option value="">Selecione...</option>
-                                <?php foreach ($coladores as $colador): ?>
-                                    <option value="<?= htmlspecialchars($colador['id_colador']) ?>">
-                                        <?= htmlspecialchars($colador['nome']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="datacolagem">Data da Colagem</label>
-                            <input type="date" id="datacolagem" name="datacolagem">
-                        </div>
-                        <div class="form-group">
-                            <label for="numCores">Nº de Cores <span class="required">*</span></label>
-                            <input type="number" id="numCores" name="numCores" value="1" min="1" max="10"
-                                oninput="validarNumero(this)" required>
-                        </div>
+                        <button type="button" class="btn-verificar" onclick="verificarCodigo()">
+                            <span id="btnText">🔍 Verificar Código</span>
+                            <div class="spinner" id="spinner"></div>
+                        </button>
                     </div>
+
+                    <div id="validationMessage" class="validation-message"></div>
                 </div>
+                <div id="formFields" style="opacity: 0.5; pointer-events: none;">
 
-                <!-- Configurações de Máquina -->
-                <div class="form-section">
-                    <h2 class="section-title">Configurações de Máquina</h2>
-                    <div class="form-grid">
-                        <div class="form-group span-2">
-                            <label for="maquina">Máquina <span class="required">*</span></label>
-                            <select id="maquina" name="maquina" required>
-                                <option value="">Selecione...</option>
-                                <?php foreach ($maquinas_colagem as $maquina_colagem): ?>
-                                    <option value="<?= htmlspecialchars($maquina_colagem['id_maquina']) ?>">
-                                        <?= htmlspecialchars($maquina_colagem['nome']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="form-group span-2">
-                            <label for="valor_eng">Valor ENG <span class="required">*</span></label>
-                            <input type="number" id="valor_eng" name="valor_eng" required>
-                        </div>
-                        <div class="form-group span-2">
-                            <label for="valor_pon">Valor PON <span class="required">*</span></label>
-                            <input type="number" id="valor_pon" name="valor_pon" required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Seção Cameron -->
-                <div class="form-section">
-                    <h2 class="section-title">Configurações Cameron</h2>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="cameron" name="cameron" value="1" onchange="toggleCameron()">
-                        <label for="cameron">Utiliza Cameron</label>
-                    </div>
-
-                    <div id="cameronFields" class="cameron-section" style="display: none;">
+                    <!-- Informações Básicas -->
+                    <div class="form-section">
+                        <h2 class="section-title">Informações Básicas</h2>
                         <div class="form-grid">
                             <div class="form-group span-2">
-                                <label for="distanciaCameron">Distância Cameron 1</label>
-                                <input type="number" id="distanciaCameron" name="distanciaCameron">
+                                <label for="produto">Produto <span class="required">*</span></label>
+                                <input type="text" id="produto" name="produto" required>
                             </div>
-                            <div class="form-group span-2">
-                                <label for="engcameron">ENG Cameron</label>
-                                <input type="number" id="engcameron" name="engcameron">
+                            <div class="form-group">
+                                <label for="camisa">Camisa <span class="required">*</span></label>
+                                <input type="number" id="camisa" name="camisa" required>
                             </div>
-                            <div class="form-group span-2">
-                                <label for="maquinaCameron">Máquina Cameron</label>
-                                <select id="maquinaCameron" name="maquinaCameron">
+                            <div class="form-group">
+                                <label for="familia">Família <span class="required">*</span></label>
+                                <select id="familia" name="familia" required>
                                     <option value="">Selecione...</option>
-                                    <option value="Cameron 01">Cameron 01</option>
-                                    <option value="Cameron 02">Cameron 02</option>
-                                    <option value="Cameron 03">Cameron 03</option>
-                                    <option value="Cameron 04">Cameron 04</option>
-                                    <option value="Cameron 05">Cameron 05</option>
+                                    <option value="Família A">Família A</option>
+                                    <option value="Família B">Família B</option>
+                                    <option value="Família C">Família C</option>
+                                    <option value="Família D">Família D</option>
+                                    <option value="Família E">Família E</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="colador">Colador <span class="required">*</span></label>
+                                <select id="colador" name="colador" required>
+                                    <option value="">Selecione...</option>
+                                    <?php foreach ($coladores as $colador): ?>
+                                        <option value="<?= htmlspecialchars($colador['id_colador']) ?>">
+                                            <?= htmlspecialchars($colador['nome']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="datacolagem">Data da Colagem</label>
+                                <input type="date" id="datacolagem" name="datacolagem">
+                            </div>
+                            <div class="form-group">
+                                <label for="numCores">Nº de Cores <span class="required">*</span></label>
+                                <input type="number" id="numCores" name="numCores" value="1" min="1" max="10"
+                                    oninput="validarNumero(this)" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Configurações de Máquina -->
+                    <div class="form-section">
+                        <h2 class="section-title">Configurações de Máquina</h2>
+                        <div class="form-grid">
+                            <div class="form-group span-2">
+                                <label for="maquina">Máquina <span class="required">*</span></label>
+                                <select id="maquina" name="maquina" required>
+                                    <option value="">Selecione...</option>
+                                    <?php foreach ($maquinas_colagem as $maquina_colagem): ?>
+                                        <option value="<?= htmlspecialchars($maquina_colagem['id_maquina']) ?>">
+                                            <?= htmlspecialchars($maquina_colagem['nome']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="form-group span-2">
-                                <label for="ponCameron">PON Cameron</label>
-                                <input type="number" id="ponCameron" name="ponCameron">
+                                <label for="valor_eng">Valor ENG <span class="required">*</span></label>
+                                <input type="number" id="valor_eng" name="valor_eng" required>
                             </div>
                             <div class="form-group span-2">
-                                <label for="distanciaCameron2">Distância Cameron 2</label>
-                                <input type="number" id="distanciaCameron2" name="distanciaCameron2">
+                                <label for="valor_pon">Valor PON <span class="required">*</span></label>
+                                <input type="number" id="valor_pon" name="valor_pon" required>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Tabela de Cores -->
-                <div class="form-section">
-                    <h2 class="section-title">Cores da Colagem</h2>
-                    <div class="cores-table-container">
-                        <table class="cores-table">
-                            <thead>
-                                <tr>
-                                    <th>Cor</th>
-                                    <th>Nome da Cor</th>
-                                    <th>Densidade</th>
-                                    <th>Fornecedor</th>
-                                </tr>
-                            </thead>
-                            <tbody id="coresTableBody">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                    <!-- Seção Cameron -->
+                    <div class="form-section">
+                        <h2 class="section-title">Configurações Cameron</h2>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="cameron" name="cameron" value="1" onchange="toggleCameron()">
+                            <label for="cameron">Utiliza Cameron</label>
+                        </div>
 
-                <!-- Observações -->
-                <div class="form-section">
-                    <h2 class="section-title">Observações</h2>
-                    <div class="form-grid">
-                        <div class="form-group span-6">
-                            <label for="observacoes">Observações Adicionais</label>
-                            <textarea id="observacoes" name="observacoes" rows="3"
-                                placeholder="Digite aqui observações relevantes sobre a colagem..."></textarea>
+                        <div id="cameronFields" class="cameron-section" style="display: none;">
+                            <div class="form-grid">
+                                <div class="form-group span-2">
+                                    <label for="distanciaCameron">Distância Cameron 1</label>
+                                    <input type="number" id="distanciaCameron" name="distanciaCameron">
+                                </div>
+                                <div class="form-group span-2">
+                                    <label for="engcameron">ENG Cameron</label>
+                                    <input type="number" id="engcameron" name="engcameron">
+                                </div>
+                                <div class="form-group span-2">
+                                    <label for="maquinaCameron">Máquina Cameron</label>
+                                    <select id="maquinaCameron" name="maquinaCameron">
+                                        <option value="">Selecione...</option>
+                                        <option value="Cameron 01">Cameron 01</option>
+                                        <option value="Cameron 02">Cameron 02</option>
+                                        <option value="Cameron 03">Cameron 03</option>
+                                        <option value="Cameron 04">Cameron 04</option>
+                                        <option value="Cameron 05">Cameron 05</option>
+                                    </select>
+                                </div>
+                                <div class="form-group span-2">
+                                    <label for="ponCameron">PON Cameron</label>
+                                    <input type="number" id="ponCameron" name="ponCameron">
+                                </div>
+                                <div class="form-group span-2">
+                                    <label for="distanciaCameron2">Distância Cameron 2</label>
+                                    <input type="number" id="distanciaCameron2" name="distanciaCameron2">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Botões -->
-                <div class="button-group">
-                    <button type="button" class="btn-limpar" onclick="limparFormulario()">
-                        🗑️ Limpar Campos
-                    </button>
-                    <button type="submit" class="btn-cadastrar">✓ Cadastrar Colagem</button>
+                    <!-- Tabela de Cores -->
+                    <div class="form-section">
+                        <h2 class="section-title">Cores da Colagem</h2>
+                        <div class="cores-table-container">
+                            <table class="cores-table">
+                                <thead>
+                                    <tr>
+                                        <th>Cor</th>
+                                        <th>Nome da Cor</th>
+                                        <th>Densidade</th>
+                                        <th>Fornecedor</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="coresTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Observações -->
+                    <div class="form-section">
+                        <h2 class="section-title">Observações</h2>
+                        <div class="form-grid">
+                            <div class="form-group span-6">
+                                <label for="observacoes">Observações Adicionais</label>
+                                <textarea id="observacoes" name="observacoes" rows="3"
+                                    placeholder="Digite aqui observações relevantes sobre a colagem..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botões -->
+                    <div class="button-group">
+                        <button type="button" class="btn-limpar" onclick="limparFormulario()">
+                            🗑️ Limpar Campos
+                        </button>
+                        <button type="submit" class="btn-cadastrar">✓ Cadastrar Colagem</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -795,6 +938,187 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         window.addEventListener('DOMContentLoaded', gerarTabelaCores);
+
+        // JavaScript corrigido para verificação de código - CADASTRO DE COLAGEM
+
+        let codigoVerificado = false;
+
+        // Função para verificar código
+        async function verificarCodigo() {
+            const codigo = document.getElementById('codigo').value;
+            const btnVerificar = document.querySelector('.btn-verificar');
+            const btnText = document.getElementById('btnText');
+            const spinner = document.getElementById('spinner');
+            const validationMessage = document.getElementById('validationMessage');
+
+            if (!codigo) {
+                mostrarMensagem('error', '❌ Por favor, digite um código!');
+                return;
+            }
+
+            // Mostra loading
+            btnVerificar.disabled = true;
+            btnText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            validationMessage.classList.remove('show');
+
+            try {
+                const formData = new FormData();
+                formData.append('codigo', codigo);
+
+                console.log('Enviando código:', codigo); // Debug
+
+                const response = await fetch('verificar_codigo.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                console.log('Status da resposta:', response.status); // Debug
+
+                // Verifica se a resposta é OK
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+
+                // Tenta pegar o texto primeiro para debug
+                const responseText = await response.text();
+                console.log('Resposta do servidor:', responseText); // Debug
+
+                // Tenta fazer parse do JSON
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (e) {
+                    console.error('Erro ao fazer parse do JSON:', e);
+                    console.error('Texto recebido:', responseText);
+                    throw new Error('Resposta inválida do servidor');
+                }
+
+                console.log('Dados parseados:', data); // Debug
+
+                if (data.success) {
+                    if (data.existe) {
+                        // Código encontrado - LIBERA formulário (para colagem)
+                        mostrarMensagem('success', `✅ ${data.message}! Cliente: "${data.dados.cliente}" - Produto: "${data.dados.produto}"`);
+                        liberarFormulario();
+                        codigoVerificado = true;
+                    } else {
+                        // Código NÃO existe - BLOQUEIA (precisa cadastrar clichê primeiro)
+                        mostrarMensagem('error', `❌ ${data.message}`);
+                        bloquearFormulario();
+                        codigoVerificado = false;
+                    }
+                } else {
+                    mostrarMensagem('error', `❌ ${data.message || 'Erro ao verificar código'}`);
+                    bloquearFormulario();
+                    codigoVerificado = false;
+                }
+
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                mostrarMensagem('error', '❌ Erro ao verificar código: ' + error.message);
+                bloquearFormulario();
+                codigoVerificado = false;
+            } finally {
+                // Esconde loading
+                btnVerificar.disabled = false;
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+            }
+        }
+
+        function mostrarMensagem(tipo, mensagem) {
+            const validationMessage = document.getElementById('validationMessage');
+            validationMessage.className = `validation-message ${tipo} show`;
+            validationMessage.textContent = mensagem;
+        }
+
+        function liberarFormulario() {
+            const formFields = document.getElementById('formFields');
+
+            if (!formFields) {
+                console.error('Elemento formFields não encontrado!');
+                return;
+            }
+
+            const inputs = formFields.querySelectorAll('input:not(#codigo), textarea, select');
+            const btnCadastrar = document.querySelector('.btn-cadastrar');
+
+            formFields.style.opacity = '1';
+            formFields.style.pointerEvents = 'auto';
+
+            inputs.forEach(input => {
+                input.disabled = false;
+            });
+
+            if (btnCadastrar) {
+                btnCadastrar.disabled = false;
+            }
+
+            // Gera a tabela de cores se a função existir
+            if (typeof gerarTabelaCores === 'function') {
+                gerarTabelaCores();
+            }
+
+            // Foca no primeiro campo disponível
+            const primeiroInput = formFields.querySelector('input:not([disabled]):not([type="hidden"]), select:not([disabled])');
+            if (primeiroInput) {
+                setTimeout(() => primeiroInput.focus(), 100);
+            }
+
+            console.log('Formulário liberado com sucesso!');
+        }
+
+        function bloquearFormulario() {
+            const formFields = document.getElementById('formFields');
+
+            if (!formFields) {
+                console.error('Elemento formFields não encontrado!');
+                return;
+            }
+
+            const inputs = formFields.querySelectorAll('input:not(#codigo), textarea, select');
+            const btnCadastrar = document.querySelector('.btn-cadastrar');
+
+            formFields.style.opacity = '0.5';
+            formFields.style.pointerEvents = 'none';
+
+            inputs.forEach(input => {
+                input.disabled = true;
+            });
+
+            if (btnCadastrar) {
+                btnCadastrar.disabled = true;
+            }
+
+            console.log('Formulário bloqueado');
+        }
+
+        // Impede envio se código não foi verificado
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('colagemForm');
+
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    if (!codigoVerificado) {
+                        e.preventDefault();
+                        alert('⚠️ Por favor, verifique o código antes de cadastrar!');
+                        return false;
+                    }
+                });
+            }
+
+            // Permite Enter no campo código para verificar
+            const codigoInput = document.getElementById('codigo');
+            if (codigoInput) {
+                codigoInput.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        verificarCodigo();
+                    }
+                });
+            }
+        });
     </script>
 </body>
 
