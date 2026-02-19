@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from dotenv import load_dotenv
 import os
+from werkzeug.security import generate_password_hash
 
 
 
@@ -123,6 +124,16 @@ class MaquinaColagem(Base):
     id_maquina = Column(Integer, primary_key=True)
     nome = Column(String(200), nullable=False)
 
+class Usuario(Base):
+    __tablename__ = 'usuario'
+    
+    id = Column(Integer, primary_key=True)
+    nome = Column(String(200), nullable=False)
+    usuario = Column(String(50), unique=True, nullable=False)
+    senha = Column(String(200), nullable=False)
+    nivel_acesso = Column(Integer, default=1)
+    def set_senha(self, senha):
+        self.senha = generate_password_hash(senha)
 
 
 

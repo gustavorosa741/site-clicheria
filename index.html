@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clicheria - Sistema</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700;900&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue-dark: #1565c0;
+            --blue-mid: #1976d2;
+            --blue-light: #2196f3;
+            --blue-pale: #bbdefb;
+            --blue-ultra: #e3f2fd;
+            --white: #ffffff;
+            --gray-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Barlow', sans-serif;
+            background: linear-gradient(135deg, var(--blue-ultra) 0%, var(--blue-pale) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background decorativo */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(33,150,243,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -200px;
+            left: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(25,118,210,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Círculos decorativos flutuantes */
+        .bg-circle {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .bg-circle-1 {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 5%;
+            background: rgba(33, 150, 243, 0.08);
+            animation-delay: 0s;
+        }
+
+        .bg-circle-2 {
+            width: 50px;
+            height: 50px;
+            top: 70%;
+            right: 8%;
+            background: rgba(25, 118, 210, 0.1);
+            animation-delay: 2s;
+        }
+
+        .bg-circle-3 {
+            width: 120px;
+            height: 120px;
+            bottom: 15%;
+            left: 10%;
+            background: rgba(33, 150, 243, 0.06);
+            animation-delay: 4s;
+        }
+
+        .bg-circle-4 {
+            width: 40px;
+            height: 40px;
+            top: 30%;
+            right: 15%;
+            background: rgba(21, 101, 192, 0.08);
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Container principal */
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Logo / Cabeçalho */
+        .brand {
+            text-align: center;
+        }
+
+        .brand-logo {
+            width: 160px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--blue-mid);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 6px;
+            opacity: 0.7;
+        }
+
+        /* Botões principais */
+        .main-buttons {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            width: 220px;
+            height: 180px;
+            background: white;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 8px 30px rgba(33, 150, 243, 0.12);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease both;
+        }
+
+        .btn-main:nth-child(1) { animation-delay: 0.1s; }
+        .btn-main:nth-child(2) { animation-delay: 0.2s; }
+
+        .btn-main::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--blue-mid), var(--blue-light));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: left;
+        }
+
+        .btn-main:hover::before {
+            transform: scaleX(1);
+        }
+
+        .btn-main:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(33, 150, 243, 0.22);
+        }
+
+        .btn-main:active {
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            font-size: 42px;
+            line-height: 1;
+            transition: transform 0.3s ease;
+            color: white;
+            font-weight: 300;
+        }
+
+        .btn-main:not(.primary) .btn-icon {
+            color: var(--blue-mid);
+        }
+
+        .btn-label {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--blue-dark);
+        }
+
+        .btn-desc {
+            font-size: 11px;
+            color: #4c575d;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 400;
+            margin-top: 0px;
+        }
+
+        /* Botão Novo Site - destaque */
+        .btn-main.primary {
+            background: linear-gradient(135deg, var(--blue-mid) 0%, var(--blue-light) 100%);
+            box-shadow: 0 8px 30px rgba(33, 150, 243, 0.35);
+        }
+
+        .btn-main.primary::before {
+            background: linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+        }
+
+        .btn-main.primary .btn-label {
+            color: white;
+        }
+
+        .btn-main.primary .btn-desc {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .btn-main.primary:hover {
+            box-shadow: 0 20px 50px rgba(33, 150, 243, 0.45);
+        }
+
+        /* Badge "Novo" */
+        .badge-new {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: white;
+            color: var(--blue-mid);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 480px;
+            animation: fadeInUp 0.8s ease 0.3s both;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: rgba(33, 150, 243, 0.2);
+        }
+
+        .divider-text {
+            font-size: 10px;
+            color: #90a4ae;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* Botão Admin */
+        .btn-admin {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 28px;
+            background: white;
+            border: 1.5px solid rgba(33, 150, 243, 0.25);
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease 0.4s both;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.08);
+        }
+
+        .btn-admin:hover {
+            border-color: var(--blue-light);
+            background: var(--blue-ultra);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.15);
+        }
+
+        .btn-admin-icon {
+            font-size: 18px;
+        }
+
+        .btn-admin-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--blue-mid);
+        }
+
+        /* Footer */
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            font-size: 11px;
+            color: #b0bec5;
+            letter-spacing: 1px;
+            animation: fadeInUp 0.8s ease 0.5s both;
+        }
+
+        /* Mobile */
+        @media (max-width: 540px) {
+            .main-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 16px;
+            }
+
+            .btn-main {
+                width: 280px;
+                height: 130px;
+                flex-direction: row;
+                gap: 20px;
+                padding: 0 30px;
+            }
+
+            .btn-icon {
+                font-size: 34px;
+            }
+
+            .btn-text {
+                text-align: left;
+            }
+
+            .brand-title {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Círculos decorativos -->
+    <div class="bg-circle bg-circle-1"></div>
+    <div class="bg-circle bg-circle-2"></div>
+    <div class="bg-circle bg-circle-3"></div>
+    <div class="bg-circle bg-circle-4"></div>
+
+    <div class="wrapper">
+
+        <!-- Brand -->
+        <div class="brand">
+            <div class="brand-logo">
+                <img src="./assets/imagens/logo.jfif" alt="PLASC" />
+            </div>
+            <div class="brand-title">Sistema de Gestão</div>
+        </div>
+
+        <!-- Botões Principais -->
+        <div class="main-buttons">
+
+            <a href="principal.php" class="btn-main primary">
+                <span class="badge-new">Novo</span>
+                <div class="btn-icon">✦</div>
+                <div class="btn-text">
+                    <div class="btn-label">Novo Sistema</div>
+                    <div class="btn-desc">Cadastros & Colagens</div>
+                </div>
+            </a>
+
+            <a href="consultas/index.php" class="btn-main">
+                <div class="btn-icon">🔍</div>
+                <div class="btn-text">
+                    <div class="btn-label">Consultas</div>
+                    <div class="btn-desc">Sistema Antigo</div>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- Divider -->
+        <div class="divider">
+            <div class="divider-line"></div>
+            <div class="divider-text">Acesso restrito</div>
+            <div class="divider-line"></div>
+        </div>
+
+        <!-- Botão Admin -->
+        <a href="login.php" class="btn-admin">
+            <span class="btn-admin-icon">⚙️</span>
+            <span class="btn-admin-label">Painel Admin</span>
+        </a>
+
+    </div>
+
+    <div class="footer">© <?php echo date('Y'); ?> Clicheria — Sistema Interno</div>
+
+</body>
+</html>
