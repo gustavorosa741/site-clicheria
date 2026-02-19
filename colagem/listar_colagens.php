@@ -1,9 +1,16 @@
 <?php
 include '../BD/conexao.php';
 
+$sqlColadores = "SELECT id_colador, nome FROM tab_colador ORDER BY nome";
+$stmtCol = $conn->prepare($sqlColadores);
+$stmtCol->execute();
+$resultCol = $stmtCol->get_result();
+$coladores = $resultCol->fetch_all(MYSQLI_ASSOC);
+$stmtCol->close();
+
 // Parâmetros de paginação
 $registrosPorPagina = 15;
-$paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$paginaAtual = isset($_GET['pagina']) ? (int) $_GET['pagina'] : 1;
 $offset = ($paginaAtual - 1) * $registrosPorPagina;
 
 // Parâmetros de filtro
@@ -13,7 +20,11 @@ $filtroFamilia = isset($_GET['familia']) ? $_GET['familia'] : '';
 $filtroColador = isset($_GET['colador']) ? $_GET['colador'] : '';
 
 // Construir query com filtros
-$sql = "SELECT id_colagem, produto, codigo, camisa, familia, colador, datacolagem FROM tab_nova_colagem WHERE 1=1";
+$sql = "SELECT tc.id_colagem, tc.produto, tc.codigo, tc.camisa, tc.familia, 
+               col.nome AS nome_colador, tc.datacolagem 
+        FROM tab_nova_colagem tc
+        INNER JOIN tab_colador col ON tc.colador = col.id_colador
+        WHERE 1=1";
 $params = [];
 $types = "";
 
@@ -36,22 +47,54 @@ if (!empty($filtroFamilia)) {
 }
 
 if (!empty($filtroColador)) {
-    $sql .= " AND colador = ?";
-    $params[] = $filtroColador;
-    $types .= "s";
+    $sql .= " AND tc.colador = ?";
+    $params[] = (int) $filtroColador;
+    $types .= "i";
 }
 
 // Contar total de registros
-$sqlCount = str_replace("SELECT id_colagem, produto, codigo, camisa, familia, colador, datacolagem", "SELECT COUNT(*) as total", $sql);
+$sqlCount = "SELECT COUNT(*) as total 
+             FROM tab_nova_colagem tc
+             INNER JOIN tab_colador col ON tc.colador = col.id_colador
+             WHERE 1=1";
+
+$paramsCount = [];
+$typesCount = "";
+
+if (!empty($filtroProduto)) {
+    $sqlCount .= " AND tc.produto LIKE ?";
+    $paramsCount[] = "%$filtroProduto%";
+    $typesCount .= "s";
+}
+
+if (!empty($filtroCodigo)) {
+    $sqlCount .= " AND tc.codigo LIKE ?";
+    $paramsCount[] = "%$filtroCodigo%";
+    $typesCount .= "s";
+}
+
+if (!empty($filtroFamilia)) {
+    $sqlCount .= " AND tc.familia = ?";
+    $paramsCount[] = $filtroFamilia;
+    $typesCount .= "s";
+}
+
+if (!empty($filtroColador)) {
+    $sqlCount .= " AND tc.colador = ?";
+    $paramsCount[] = (int)$filtroColador;
+    $typesCount .= "i";
+}
+
 $stmtCount = $conn->prepare($sqlCount);
 
-if (!empty($params)) {
-    $stmtCount->bind_param($types, ...$params);
+if (!empty($paramsCount)) {
+    $stmtCount->bind_param($typesCount, ...$paramsCount);
 }
 
 $stmtCount->execute();
 $resultCount = $stmtCount->get_result();
-$totalRegistros = $resultCount->fetch_assoc()['total'];
+$row = $resultCount->fetch_assoc();
+$totalRegistros = $row['total'];
 $totalPaginas = ceil($totalRegistros / $registrosPorPagina);
 $stmtCount->close();
 
@@ -80,6 +123,7 @@ $conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -533,6 +577,7 @@ $conn->close();
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -557,32 +602,39 @@ $conn->close();
                 <form method="GET" action="" class="filters-form">
                     <div class="filter-group">
                         <label for="filtroProduto">Produto</label>
-                        <input type="text" id="filtroProduto" name="produto" placeholder="Buscar por produto..." value="<?php echo htmlspecialchars($filtroProduto); ?>">
+                        <input type="text" id="filtroProduto" name="produto" placeholder="Buscar por produto..."
+                            value="<?php echo htmlspecialchars($filtroProduto); ?>">
                     </div>
                     <div class="filter-group">
                         <label for="filtroCodigo">Código</label>
-                        <input type="text" id="filtroCodigo" name="codigo" placeholder="Buscar por código..." value="<?php echo htmlspecialchars($filtroCodigo); ?>">
+                        <input type="text" id="filtroCodigo" name="codigo" placeholder="Buscar por código..."
+                            value="<?php echo htmlspecialchars($filtroCodigo); ?>">
                     </div>
                     <div class="filter-group">
                         <label for="filtroFamilia">Família</label>
                         <select id="filtroFamilia" name="familia">
                             <option value="">Todas</option>
-                            <option value="Família A" <?php echo $filtroFamilia == 'Família A' ? 'selected' : ''; ?>>Família A</option>
-                            <option value="Família B" <?php echo $filtroFamilia == 'Família B' ? 'selected' : ''; ?>>Família B</option>
-                            <option value="Família C" <?php echo $filtroFamilia == 'Família C' ? 'selected' : ''; ?>>Família C</option>
-                            <option value="Família D" <?php echo $filtroFamilia == 'Família D' ? 'selected' : ''; ?>>Família D</option>
-                            <option value="Família E" <?php echo $filtroFamilia == 'Família E' ? 'selected' : ''; ?>>Família E</option>
+                            <option value="Família A" <?php echo $filtroFamilia == 'Família A' ? 'selected' : ''; ?>>
+                                Família A</option>
+                            <option value="Família B" <?php echo $filtroFamilia == 'Família B' ? 'selected' : ''; ?>>
+                                Família B</option>
+                            <option value="Família C" <?php echo $filtroFamilia == 'Família C' ? 'selected' : ''; ?>>
+                                Família C</option>
+                            <option value="Família D" <?php echo $filtroFamilia == 'Família D' ? 'selected' : ''; ?>>
+                                Família D</option>
+                            <option value="Família E" <?php echo $filtroFamilia == 'Família E' ? 'selected' : ''; ?>>
+                                Família E</option>
                         </select>
                     </div>
                     <div class="filter-group">
                         <label for="filtroColador">Colador</label>
                         <select id="filtroColador" name="colador">
                             <option value="">Todos</option>
-                            <option value="João Silva" <?php echo $filtroColador == 'João Silva' ? 'selected' : ''; ?>>João Silva</option>
-                            <option value="Maria Santos" <?php echo $filtroColador == 'Maria Santos' ? 'selected' : ''; ?>>Maria Santos</option>
-                            <option value="Pedro Oliveira" <?php echo $filtroColador == 'Pedro Oliveira' ? 'selected' : ''; ?>>Pedro Oliveira</option>
-                            <option value="Ana Costa" <?php echo $filtroColador == 'Ana Costa' ? 'selected' : ''; ?>>Ana Costa</option>
-                            <option value="Carlos Souza" <?php echo $filtroColador == 'Carlos Souza' ? 'selected' : ''; ?>>Carlos Souza</option>
+                            <?php foreach ($coladores as $colador): ?>
+                                <option value="<?= $colador['id_colador'] ?>" <?= $filtroColador == $colador['id_colador'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($colador['nome']) ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <button type="submit" class="btn-filtrar">
@@ -604,69 +656,80 @@ $conn->close();
             <!-- Tabela -->
             <div class="table-container">
                 <?php if (count($colagens) > 0): ?>
-                <table class="colagens-table">
-                    <thead>
-                        <tr>
-                            <th>Produto</th>
-                            <th>Código</th>
-                            <th>Camisa</th>
-                            <th>Família</th>
-                            <th>Colador</th>
-                            <th>Data</th>
-                            <th class="actions-col">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($colagens as $colagem): ?>
-                        <tr>
-                            <td class="produto-col" data-label="Produto"><?php echo htmlspecialchars($colagem['produto']); ?></td>
-                            <td class="codigo-col" data-label="Código"><?php echo htmlspecialchars($colagem['codigo']); ?></td>
-                            <td data-label="Camisa"><?php echo htmlspecialchars($colagem['camisa']); ?></td>
-                            <td data-label="Família"><?php echo htmlspecialchars($colagem['familia']); ?></td>
-                            <td data-label="Colador"><?php echo htmlspecialchars($colagem['colador']); ?></td>
-                            <td data-label="Data"><?php echo $colagem['datacolagem'] ? date('d/m/Y', strtotime($colagem['datacolagem'])) : '-'; ?></td>
-                            <td>
-                                <div class="actions-cell">
-                                    <a href="ver_colagem.php?id_colagem=<?php echo $colagem['id_colagem']; ?>" class="btn-action btn-ver">Ver</a>
-                                    <a href="editar_colagem.php?id_colagem=<?php echo $colagem['id_colagem']; ?>" class="btn-action btn-alterar">Alterar</a>
-                                    <button class="btn-action btn-excluir" onclick="excluirColagem(<?php echo $colagem['id_colagem']; ?>, '<?php echo htmlspecialchars($colagem['produto']); ?>')">Excluir</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                    <table class="colagens-table">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Código</th>
+                                <th>Camisa</th>
+                                <th>Família</th>
+                                <th>Colador</th>
+                                <th>Data</th>
+                                <th class="actions-col">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($colagens as $colagem): ?>
+                                <tr>
+                                    <td class="produto-col" data-label="Produto">
+                                        <?php echo htmlspecialchars($colagem['produto']); ?>
+                                    </td>
+                                    <td class="codigo-col" data-label="Código">
+                                        <?php echo htmlspecialchars($colagem['codigo']); ?>
+                                    </td>
+                                    <td data-label="Camisa"><?php echo htmlspecialchars($colagem['camisa']); ?></td>
+                                    <td data-label="Família"><?php echo htmlspecialchars($colagem['familia']); ?></td>
+                                    <td data-label="Colador"><?php echo htmlspecialchars($colagem['nome_colador']); ?></td>
+                                    <td data-label="Data">
+                                        <?php echo $colagem['datacolagem'] ? date('d/m/Y', strtotime($colagem['datacolagem'])) : '-'; ?>
+                                    </td>
+                                    <td>
+                                        <div class="actions-cell">
+                                            <a href="ver_colagem.php?id_colagem=<?php echo $colagem['id_colagem']; ?>"
+                                                class="btn-action btn-ver">Ver</a>
+                                            <a href="editar_colagem.php?id_colagem=<?php echo $colagem['id_colagem']; ?>"
+                                                class="btn-action btn-alterar">Alterar</a>
+                                            <button class="btn-action btn-excluir"
+                                                onclick="excluirColagem(<?php echo $colagem['id_colagem']; ?>, '<?php echo htmlspecialchars($colagem['produto']); ?>')">Excluir</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 <?php else: ?>
-                <div class="empty-state">
-                    <h3>📭 Nenhum registro encontrado</h3>
-                    <p>Não há colagens cadastradas com os filtros selecionados.</p>
-                </div>
+                    <div class="empty-state">
+                        <h3>📭 Nenhum registro encontrado</h3>
+                        <p>Não há colagens cadastradas com os filtros selecionados.</p>
+                    </div>
                 <?php endif; ?>
             </div>
 
             <!-- Paginação -->
             <?php if ($totalPaginas > 1): ?>
-            <div class="pagination">
-                <?php if ($paginaAtual > 1): ?>
-                    <a href="?pagina=<?php echo $paginaAtual - 1; ?>&produto=<?php echo urlencode($filtroProduto); ?>&codigo=<?php echo urlencode($filtroCodigo); ?>&familia=<?php echo urlencode($filtroFamilia); ?>&colador=<?php echo urlencode($filtroColador); ?>">
-                        ◀ Anterior
-                    </a>
-                <?php else: ?>
-                    <a class="disabled">◀ Anterior</a>
-                <?php endif; ?>
+                <div class="pagination">
+                    <?php if ($paginaAtual > 1): ?>
+                        <a
+                            href="?pagina=<?php echo $paginaAtual - 1; ?>&produto=<?php echo urlencode($filtroProduto); ?>&codigo=<?php echo urlencode($filtroCodigo); ?>&familia=<?php echo urlencode($filtroFamilia); ?>&colador=<?php echo urlencode($filtroColador); ?>">
+                            ◀ Anterior
+                        </a>
+                    <?php else: ?>
+                        <a class="disabled">◀ Anterior</a>
+                    <?php endif; ?>
 
-                <span class="page-info">
-                    Página <strong><?php echo $paginaAtual; ?></strong> de <strong><?php echo $totalPaginas; ?></strong>
-                </span>
+                    <span class="page-info">
+                        Página <strong><?php echo $paginaAtual; ?></strong> de <strong><?php echo $totalPaginas; ?></strong>
+                    </span>
 
-                <?php if ($paginaAtual < $totalPaginas): ?>
-                    <a href="?pagina=<?php echo $paginaAtual + 1; ?>&produto=<?php echo urlencode($filtroProduto); ?>&codigo=<?php echo urlencode($filtroCodigo); ?>&familia=<?php echo urlencode($filtroFamilia); ?>&colador=<?php echo urlencode($filtroColador); ?>">
-                        Próxima ▶
-                    </a>
-                <?php else: ?>
-                    <a class="disabled">Próxima ▶</a>
-                <?php endif; ?>
-            </div>
+                    <?php if ($paginaAtual < $totalPaginas): ?>
+                        <a
+                            href="?pagina=<?php echo $paginaAtual + 1; ?>&produto=<?php echo urlencode($filtroProduto); ?>&codigo=<?php echo urlencode($filtroCodigo); ?>&familia=<?php echo urlencode($filtroFamilia); ?>&colador=<?php echo urlencode($filtroColador); ?>">
+                            Próxima ▶
+                        </a>
+                    <?php else: ?>
+                        <a class="disabled">Próxima ▶</a>
+                    <?php endif; ?>
+                </div>
             <?php endif; ?>
         </div>
     </div>
@@ -691,4 +754,5 @@ $conn->close();
         }
     </script>
 </body>
+
 </html>

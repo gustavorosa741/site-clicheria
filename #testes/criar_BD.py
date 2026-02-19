@@ -11,7 +11,7 @@ load_dotenv()
 usuario = os.getenv("USUARIO")
 senha = os.getenv("SENHA")
 
-engine = create_engine(f"mysql+pymysql://{usuario}:{senha}@localhost:3306/clicheria?charset=utf8mb4")
+engine = create_engine(f"mysql+pymysql://{usuario}:{senha}@localhost:3306/nova_clicheria?charset=utf8mb4")
 
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
@@ -68,7 +68,6 @@ class CadastroColagem(Base):
     codigo = Column(Integer, nullable=False)
     camisa= Column(Integer, nullable=False)
     valor_eng = Column(Integer, nullable=False)
-    maquina = Column(String(200), nullable=False)
     valor_pon = Column(Integer, nullable=False)
     familia = Column(String(200), nullable=False)
     cameron = Column(Boolean, nullable=False)
@@ -78,8 +77,9 @@ class CadastroColagem(Base):
     ponCameron = Column(Integer)
     distanciaCameron2 = Column(Integer, nullable=False)
     observacoes = Column(String(200))
-    colador = Column(String(200), nullable=False)
     datacolagem = Column(Date)
+    colador = Column(Integer, nullable=False)
+    maquina_colagem = Column(Integer, nullable=False)
 
     cores =Column(Integer, nullable=False)
     cor01 = Column(String(50))
@@ -113,7 +113,15 @@ class CadastroColagem(Base):
     fornecedor09 = Column(String(50))
     fornecedor10 = Column(String(50))
 
+class Colador(Base):
+    __tablename__ = 'tab_colador'
+    id_colador = Column(Integer, primary_key=True)
+    nome = Column(String(200), nullable=False)
 
+class MaquinaColagem(Base):
+    __tablename__ = 'maquina_colagem'
+    id_maquina = Column(Integer, primary_key=True)
+    nome = Column(String(200), nullable=False)
 
 
 

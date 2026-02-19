@@ -1,13 +1,25 @@
 <?php
 include '../BD/conexao.php';
 
+$sql = "SELECT id_colador, nome FROM tab_colador ORDER BY nome";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$result = $stmt->get_result();
+$coladores = $result->fetch_all(MYSQLI_ASSOC);
+
+$sql = "SELECT id_maquina, nome FROM maquina_colagem ORDER BY nome";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$result = $stmt->get_result();
+$maquinas_colagem = $result->fetch_all(MYSQLI_ASSOC);
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $produto = $_POST['produto'] ?? '';
         $codigo = $_POST['codigo'] ?? 0;
         $camisa = $_POST['camisa'] ?? 0;
         $valor_eng = $_POST['valor_eng'] ?? 0;
-        $maquina = $_POST['maquina'] ?? '';
         $valor_pon = $_POST['valor_pon'] ?? 0;
         $familia = $_POST['familia'] ?? '';
         $cameron = isset($_POST['cameron']) ? 1 : 0;
@@ -18,16 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $distanciaCameron2 = $_POST['distanciaCameron2'] ?? 0;
         $observacoes = $_POST['observacoes'] ?? null;
         $colador = $_POST['colador'] ?? '';
-
+        $maquina_colagem = $_POST['maquina'] ?? '';
         // Validar e tratar data corretamente
         if (isset($_POST['datacolagem']) && $_POST['datacolagem'] !== '') {
             $datacolagem = $_POST['datacolagem'];
         } else {
             $datacolagem = null;
         }
-        echo "<pre>datacolagem final: " . var_export($datacolagem, true) . "</pre>";
-        $cores = $_POST['cores'] ?? 0;
 
+        $cores = $_POST['cores'] ?? 0;
         $cor01 = $_POST['cor01'] ?? null;
         $cor02 = $_POST['cor02'] ?? null;
         $cor03 = $_POST['cor03'] ?? null;
@@ -62,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fornecedor10 = $_POST['fornecedor10'] ?? null;
 
         // Validações básicas
-        if (empty($produto) || empty($codigo) || empty($camisa) || empty($maquina) || empty($familia) || empty($colador)) {
+        if (empty($produto) || empty($codigo) || empty($camisa) || empty($maquina_colagem) || empty($familia) || empty($colador)) {
             throw new Exception('Campos obrigatórios não preenchidos!');
         }
 
@@ -71,9 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $sql = "INSERT INTO tab_nova_colagem (
-            produto, codigo, camisa, valor_eng, maquina, valor_pon, familia, 
+            produto, codigo, camisa, valor_eng, valor_pon, familia, 
             cameron, distanciaCameron, engcameron, maquinaCameron, ponCameron, 
-            distanciaCameron2, observacoes, colador, datacolagem, cores,
+            distanciaCameron2, observacoes, datacolagem, colador, maquina_colagem, cores,
             cor01, cor02, cor03, cor04, cor05, cor06, cor07, cor08, cor09, cor10,
             densidade01, densidade02, densidade03, densidade04, densidade05, 
             densidade06, densidade07, densidade08, densidade09, densidade10,
@@ -83,15 +94,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt = $conn->prepare($sql);
         $stmt->bind_param(
-            "siiisisiiisisssssssssssssssssssssssssssssssssss",
-            $produto, $codigo, $camisa, $valor_eng, $maquina, $valor_pon, $familia,
-            $cameron, $distanciaCameron, $engcameron, $maquinaCameron, $ponCameron,
-            $distanciaCameron2, $observacoes, $colador, $datacolagem, $cores,
-            $cor01, $cor02, $cor03, $cor04, $cor05, $cor06, $cor07, $cor08, $cor09, $cor10,
-            $densidade01, $densidade02, $densidade03, $densidade04, $densidade05,
-            $densidade06, $densidade07, $densidade08, $densidade09, $densidade10,
-            $fornecedor01, $fornecedor02, $fornecedor03, $fornecedor04, $fornecedor05,
-            $fornecedor06, $fornecedor07, $fornecedor08, $fornecedor09, $fornecedor10
+            "siiisisiiisissiisssssssssssssssssssssssssssssss",
+            $produto,
+            $codigo,
+            $camisa,
+            $valor_eng,
+            $valor_pon,
+            $familia,
+            $cameron,
+            $distanciaCameron,
+            $engcameron,
+            $maquinaCameron,
+            $ponCameron,
+            $distanciaCameron2,
+            $observacoes,
+            $datacolagem,
+            $colador,
+            $maquina_colagem,
+            $cores,
+            $cor01,
+            $cor02,
+            $cor03,
+            $cor04,
+            $cor05,
+            $cor06,
+            $cor07,
+            $cor08,
+            $cor09,
+            $cor10,
+            $densidade01,
+            $densidade02,
+            $densidade03,
+            $densidade04,
+            $densidade05,
+            $densidade06,
+            $densidade07,
+            $densidade08,
+            $densidade09,
+            $densidade10,
+            $fornecedor01,
+            $fornecedor02,
+            $fornecedor03,
+            $fornecedor04,
+            $fornecedor05,
+            $fornecedor06,
+            $fornecedor07,
+            $fornecedor08,
+            $fornecedor09,
+            $fornecedor10
         );
 
         if ($stmt->execute()) {
@@ -542,11 +592,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label for="colador">Colador <span class="required">*</span></label>
                             <select id="colador" name="colador" required>
                                 <option value="">Selecione...</option>
-                                <option value="João Silva">João Silva</option>
-                                <option value="Maria Santos">Maria Santos</option>
-                                <option value="Pedro Oliveira">Pedro Oliveira</option>
-                                <option value="Ana Costa">Ana Costa</option>
-                                <option value="Carlos Souza">Carlos Souza</option>
+                                <?php foreach ($coladores as $colador): ?>
+                                    <option value="<?= htmlspecialchars($colador['id_colador']) ?>">
+                                        <?= htmlspecialchars($colador['nome']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="form-group">
@@ -569,11 +619,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label for="maquina">Máquina <span class="required">*</span></label>
                             <select id="maquina" name="maquina" required>
                                 <option value="">Selecione...</option>
-                                <option value="Máquina 01">Máquina 01</option>
-                                <option value="Máquina 02">Máquina 02</option>
-                                <option value="Máquina 03">Máquina 03</option>
-                                <option value="Máquina 04">Máquina 04</option>
-                                <option value="Máquina 05">Máquina 05</option>
+                                <?php foreach ($maquinas_colagem as $maquina_colagem): ?>
+                                    <option value="<?= htmlspecialchars($maquina_colagem['id_maquina']) ?>">
+                                        <?= htmlspecialchars($maquina_colagem['nome']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="form-group span-2">

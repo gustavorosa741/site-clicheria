@@ -13,7 +13,14 @@ if (!isset($_GET['id_colagem']) || empty($_GET['id_colagem'])) {
 $id = (int) $_GET['id_colagem'];
 
 // Busca os dados completos da colagem
-$sql = "SELECT * FROM tab_nova_colagem WHERE id_colagem = ?";
+$id = (int) $_GET['id_colagem'];
+
+$sql = "SELECT tc.*, col.nome AS nome_colador, maq.nome AS nome_maquina 
+        FROM tab_nova_colagem tc
+        INNER JOIN tab_colador col ON tc.colador = col.id_colador
+        INNER JOIN maquina_colagem maq ON tc.maquina_colagem = maq.id_maquina
+        WHERE tc.id_colagem = ?";
+
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
 $stmt->execute();
@@ -319,7 +326,7 @@ $conn->close();
                     </div>
                     <div class="info-item">
                         <div class="info-label">Colador</div>
-                        <div class="info-value"><?php echo htmlspecialchars($colagem['colador']); ?></div>
+                        <div class="info-value"><?php echo htmlspecialchars($colagem['nome_colador']); ?></div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Data da Colagem</div>
@@ -338,7 +345,7 @@ $conn->close();
                 <div class="info-grid">
                     <div class="info-item">
                         <div class="info-label">Máquina</div>
-                        <div class="info-value"><?php echo htmlspecialchars($colagem['maquina']); ?></div>
+                        <div class="info-value"><?php echo htmlspecialchars($colagem['nome_maquina']); ?></div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Valor ENG</div>

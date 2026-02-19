@@ -1,6 +1,20 @@
 <?php
 include '../BD/conexao.php';
 
+// Busca coladores
+$sqlColadores = "SELECT id_colador, nome FROM tab_colador ORDER BY nome";
+$stmtCol = $conn->prepare($sqlColadores);
+$stmtCol->execute();
+$coladores = $stmtCol->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmtCol->close();
+
+// Busca máquinas
+$sqlMaquinas = "SELECT id_maquina, nome FROM maquina_colagem ORDER BY nome";
+$stmtMaq = $conn->prepare($sqlMaquinas);
+$stmtMaq->execute();
+$maquinas_colagem = $stmtMaq->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmtMaq->close();
+
 // Verifica se o ID foi passado
 if (!isset($_GET['id_colagem']) || empty($_GET['id_colagem'])) {
     echo "<script>
@@ -18,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $codigo = $_POST['codigo'] ?? 0;
     $camisa = $_POST['camisa'] ?? 0;
     $valor_eng = $_POST['valor_eng'] ?? 0;
-    $maquina = $_POST['maquina'] ?? '';
+
     $valor_pon = $_POST['valor_pon'] ?? 0;
     $familia = $_POST['familia'] ?? '';
     $cameron = isset($_POST['cameron']) ? 1 : 0;
@@ -29,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $distanciaCameron2 = $_POST['distanciaCameron2'] ?? 0;
     $observacoes = $_POST['observacoes'] ?? null;
     $colador = $_POST['colador'] ?? '';
+    $maquina_colagem = $_POST['maquina'] ?? '';
     // Validar e tratar data corretamente
     if (isset($_POST['datacolagem']) && $_POST['datacolagem'] !== '') {
         $datacolagem = $_POST['datacolagem'];
@@ -72,9 +87,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fornecedor10 = $_POST['fornecedor10'] ?? null;
 
     $sql = "UPDATE tab_nova_colagem SET 
-            produto = ?, codigo = ?, camisa = ?, valor_eng = ?, maquina = ?, valor_pon = ?, familia = ?,
+            produto = ?, codigo = ?, camisa = ?, valor_eng = ?, valor_pon = ?, familia = ?,
             cameron = ?, distanciaCameron = ?, engcameron = ?, maquinaCameron = ?, ponCameron = ?,
-            distanciaCameron2 = ?, observacoes = ?, colador = ?, datacolagem = ?, cores = ?,
+            distanciaCameron2 = ?, observacoes = ?, datacolagem = ?, colador = ?,  maquina_colagem = ?, cores = ?,
             cor01 = ?, cor02 = ?, cor03 = ?, cor04 = ?, cor05 = ?, cor06 = ?, cor07 = ?, cor08 = ?, cor09 = ?, cor10 = ?,
             densidade01 = ?, densidade02 = ?, densidade03 = ?, densidade04 = ?, densidade05 = ?,
             densidade06 = ?, densidade07 = ?, densidade08 = ?, densidade09 = ?, densidade10 = ?,
@@ -88,7 +103,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $codigo,
         $camisa,
         $valor_eng,
-        $maquina,
         $valor_pon,
         $familia,
         $cameron,
@@ -98,8 +112,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ponCameron,
         $distanciaCameron2,
         $observacoes,
-        $colador,
         $datacolagem,
+        $colador,
+        $maquina_colagem,
         $cores,
         $cor01,
         $cor02,
@@ -600,11 +615,11 @@ $conn->close();
                             <label for="colador">Colador *</label>
                             <select id="colador" name="colador" required>
                                 <option value="">Selecione...</option>
-                                <option value="João Silva" <?php echo $colagem['colador'] == 'João Silva' ? 'selected' : ''; ?>>João Silva</option>
-                                <option value="Maria Santos" <?php echo $colagem['colador'] == 'Maria Santos' ? 'selected' : ''; ?>>Maria Santos</option>
-                                <option value="Pedro Oliveira" <?php echo $colagem['colador'] == 'Pedro Oliveira' ? 'selected' : ''; ?>>Pedro Oliveira</option>
-                                <option value="Ana Costa" <?php echo $colagem['colador'] == 'Ana Costa' ? 'selected' : ''; ?>>Ana Costa</option>
-                                <option value="Carlos Souza" <?php echo $colagem['colador'] == 'Carlos Souza' ? 'selected' : ''; ?>>Carlos Souza</option>
+                                <?php foreach ($coladores as $col): ?>
+                                    <option value="<?= $col['id_colador'] ?>" <?= $colagem['colador'] == $col['id_colador'] ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($col['nome']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="form-group">
@@ -629,11 +644,11 @@ $conn->close();
                             <label for="maquina">Máquina *</label>
                             <select id="maquina" name="maquina" required>
                                 <option value="">Selecione...</option>
-                                <option value="Máquina 01" <?php echo $colagem['maquina'] == 'Máquina 01' ? 'selected' : ''; ?>>Máquina 01</option>
-                                <option value="Máquina 02" <?php echo $colagem['maquina'] == 'Máquina 02' ? 'selected' : ''; ?>>Máquina 02</option>
-                                <option value="Máquina 03" <?php echo $colagem['maquina'] == 'Máquina 03' ? 'selected' : ''; ?>>Máquina 03</option>
-                                <option value="Máquina 04" <?php echo $colagem['maquina'] == 'Máquina 04' ? 'selected' : ''; ?>>Máquina 04</option>
-                                <option value="Máquina 05" <?php echo $colagem['maquina'] == 'Máquina 05' ? 'selected' : ''; ?>>Máquina 05</option>
+                                <?php foreach ($maquinas_colagem as $maq): ?>
+                                    <option value="<?= $maq['id_maquina'] ?>" <?= $colagem['maquina_colagem'] == $maq['id_maquina'] ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($maq['nome']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="form-group span-2">
