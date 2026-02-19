@@ -3,7 +3,7 @@ include '../BD/conexao.php';
 
 // Parâmetros de paginação
 $registrosPorPagina = 15;
-$paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$paginaAtual = isset($_GET['pagina']) ? (int) $_GET['pagina'] : 1;
 $offset = ($paginaAtual - 1) * $registrosPorPagina;
 
 // Parâmetros de filtro
@@ -13,7 +13,7 @@ $filtroCodigo = isset($_GET['codigo']) ? $_GET['codigo'] : '';
 $filtroArmario = isset($_GET['armario']) ? $_GET['armario'] : '';
 
 // Construir query com filtros
-$sql = "SELECT id_cliche, cliente, produto, codigo, armario, prateleira FROM tab_clicheria WHERE 1=1";
+$sql = "SELECT id_cliche, cliente, produto, codigo, armario, prateleira FROM tab_nova_clicheria WHERE 1=1";
 $params = [];
 $types = "";
 
@@ -80,6 +80,7 @@ $conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -192,16 +193,22 @@ $conn->close();
 
         .filters-form {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             align-items: end;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
         }
 
         .filter-group {
             display: flex;
             flex-direction: column;
             flex: 1;
-            min-width: 200px;
+            min-width: 120px;
+        }
+
+        .filter-group:nth-child(1),
+        .filter-group:nth-child(2) {
+            flex: 2;
+            min-width: 180px;
         }
 
         .filter-group label {
@@ -213,7 +220,7 @@ $conn->close();
 
         .filter-group input,
         .filter-group select {
-            padding: 10px 12px;
+            padding: 11px 12px;
             border: 2px solid #e0e0e0;
             border-radius: 6px;
             font-size: 14px;
@@ -228,7 +235,7 @@ $conn->close();
         }
 
         .btn-filtrar {
-            padding: 10px 25px;
+            padding: 11px 20px;
             background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
             color: white;
             border: none;
@@ -237,6 +244,7 @@ $conn->close();
             cursor: pointer;
             transition: all 0.3s ease;
             height: fit-content;
+            white-space: nowrap;
         }
 
         .btn-filtrar:hover {
@@ -245,7 +253,7 @@ $conn->close();
         }
 
         .btn-limpar {
-            padding: 10px 25px;
+            padding: 11px 20px;
             background: #757575;
             color: white;
             border: none;
@@ -254,6 +262,7 @@ $conn->close();
             cursor: pointer;
             transition: all 0.3s ease;
             height: fit-content;
+            white-space: nowrap;
         }
 
         .btn-limpar:hover {
@@ -453,12 +462,23 @@ $conn->close();
 
         /* Responsivo */
         @media (max-width: 1024px) {
-            .table-container {
-                overflow-x: scroll;
+            .filters-form {
+                flex-wrap: wrap;
             }
 
-            .cliches-table {
-                min-width: 900px;
+            .filter-group:nth-child(1),
+            .filter-group:nth-child(2) {
+                flex: 1 1 calc(50% - 6px);
+            }
+
+            .filter-group:nth-child(3),
+            .filter-group:nth-child(4) {
+                flex: 1 1 calc(50% - 6px);
+            }
+
+            .btn-filtrar,
+            .btn-limpar {
+                flex: 1 1 calc(50% - 6px);
             }
         }
 
@@ -507,8 +527,13 @@ $conn->close();
                 flex-direction: column;
             }
 
-            .filter-group {
+            .filter-group,
+            .filter-group:nth-child(1),
+            .filter-group:nth-child(2),
+            .filter-group:nth-child(3),
+            .filter-group:nth-child(4) {
                 width: 100%;
+                flex: 1 1 100%;
             }
 
             .btn-filtrar,
@@ -574,6 +599,7 @@ $conn->close();
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -598,25 +624,23 @@ $conn->close();
                 <form method="GET" action="" class="filters-form">
                     <div class="filter-group">
                         <label for="filtroCliente">Cliente</label>
-                        <input type="text" id="filtroCliente" name="cliente" placeholder="Buscar por cliente..." value="<?php echo htmlspecialchars($filtroCliente); ?>">
+                        <input type="text" id="filtroCliente" name="cliente" placeholder="Buscar por cliente..."
+                            value="<?php echo htmlspecialchars($filtroCliente); ?>">
                     </div>
                     <div class="filter-group">
                         <label for="filtroProduto">Produto</label>
-                        <input type="text" id="filtroProduto" name="produto" placeholder="Buscar por produto..." value="<?php echo htmlspecialchars($filtroProduto); ?>">
+                        <input type="text" id="filtroProduto" name="produto" placeholder="Buscar por produto..."
+                            value="<?php echo htmlspecialchars($filtroProduto); ?>">
                     </div>
                     <div class="filter-group">
                         <label for="filtroCodigo">Código</label>
-                        <input type="text" id="filtroCodigo" name="codigo" placeholder="Buscar por código..." value="<?php echo htmlspecialchars($filtroCodigo); ?>">
+                        <input type="text" id="filtroCodigo" name="codigo" placeholder="Código..."
+                            value="<?php echo htmlspecialchars($filtroCodigo); ?>">
                     </div>
                     <div class="filter-group">
                         <label for="filtroArmario">Armário</label>
-                        <select id="filtroArmario" name="armario">
-                            <option value="">Todos</option>
-                            <option value="1" <?php echo $filtroArmario == '1' ? 'selected' : ''; ?>>Armário 1</option>
-                            <option value="2" <?php echo $filtroArmario == '2' ? 'selected' : ''; ?>>Armário 2</option>
-                            <option value="3" <?php echo $filtroArmario == '3' ? 'selected' : ''; ?>>Armário 3</option>
-                            <option value="4" <?php echo $filtroArmario == '4' ? 'selected' : ''; ?>>Armário 4</option>
-                        </select>
+                        <input type="text" id="filtroArmario" name="armario" placeholder="Armário..."
+                            value="<?php echo htmlspecialchars($filtroArmario); ?>">
                     </div>
                     <button type="submit" class="btn-filtrar">
                         🔍 Filtrar
@@ -637,94 +661,97 @@ $conn->close();
             <!-- Tabela -->
             <div class="table-container">
                 <?php if (count($cliches) > 0): ?>
-                <table class="cliches-table">
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Produto</th>
-                            <th>Código</th>
-                            <th>Armário</th>
-                            <th>Prateleira</th>
-                            <th class="actions-col">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($cliches as $cliche): ?>
-                        <tr>
-                            <td class="cliente-col" data-label="Cliente"><?php echo htmlspecialchars($cliche['cliente']); ?></td>
-                            <td data-label="Produto"><?php echo htmlspecialchars($cliche['produto']); ?></td>
-                            <td class="codigo-col" data-label="Código"><?php echo htmlspecialchars($cliche['codigo']); ?></td>
-                            <td data-label="Armário"><?php echo htmlspecialchars($cliche['armario']); ?></td>
-                            <td data-label="Prateleira"><?php echo htmlspecialchars($cliche['prateleira']); ?></td>
-                            <td>
-                                <div class="actions-cell">
-                                    <a href="ver_cliche.php?id_cliche=<?php echo $cliche['id_cliche']; ?>" class="btn-action btn-ver">Ver</a>
-                                    <a href="editar_cliche.php?id_cliche=<?php echo $cliche['id_cliche']; ?>" class="btn-action btn-alterar">Alterar</a>
-                                    <button class="btn-action btn-excluir" onclick="excluirCliche(<?php echo $cliche['id_cliche']; ?>, '<?php echo htmlspecialchars($cliche['cliente']); ?>')">Excluir</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                    <table class="cliches-table">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Produto</th>
+                                <th>Código</th>
+                                <th>Armário</th>
+                                <th>Prateleira</th>
+                                <th class="actions-col">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($cliches as $cliche): ?>
+                                <tr>
+                                    <td class="cliente-col" data-label="Cliente">
+                                        <?php echo htmlspecialchars($cliche['cliente']); ?></td>
+                                    <td data-label="Produto"><?php echo htmlspecialchars($cliche['produto']); ?></td>
+                                    <td class="codigo-col" data-label="Código">
+                                        <?php echo htmlspecialchars($cliche['codigo']); ?></td>
+                                    <td data-label="Armário"><?php echo htmlspecialchars($cliche['armario']); ?></td>
+                                    <td data-label="Prateleira"><?php echo htmlspecialchars($cliche['prateleira']); ?></td>
+                                    <td>
+                                        <div class="actions-cell">
+                                            <a href="ver_cliche.php?id_cliche=<?php echo $cliche['id_cliche']; ?>"
+                                                class="btn-action btn-ver">Ver</a>
+                                            <a href="editar_cliche.php?id_cliche=<?php echo $cliche['id_cliche']; ?>"
+                                                class="btn-action btn-alterar">Alterar</a>
+                                            <button class="btn-action btn-excluir"
+                                                onclick="excluirCliche(<?php echo $cliche['id_cliche']; ?>, '<?php echo htmlspecialchars($cliche['cliente']); ?>')">Excluir</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 <?php else: ?>
-                <div class="empty-state">
-                    <h3>📭 Nenhum registro encontrado</h3>
-                    <p>Não há clichês cadastrados com os filtros selecionados.</p>
-                </div>
+                    <div class="empty-state">
+                        <h3>📭 Nenhum registro encontrado</h3>
+                        <p>Não há clichês cadastrados com os filtros selecionados.</p>
+                    </div>
                 <?php endif; ?>
             </div>
 
             <!-- Paginação -->
             <?php if ($totalPaginas > 1): ?>
-            <div class="pagination">
-                <?php if ($paginaAtual > 1): ?>
-                    <a href="?pagina=<?php echo $paginaAtual - 1; ?>&cliente=<?php echo urlencode($filtroCliente); ?>&produto=<?php echo urlencode($filtroProduto); ?>&codigo=<?php echo urlencode($filtroCodigo); ?>&armario=<?php echo urlencode($filtroArmario); ?>">
-                        ◀ Anterior
-                    </a>
-                <?php else: ?>
-                    <a class="disabled">◀ Anterior</a>
-                <?php endif; ?>
+                <div class="pagination">
+                    <?php if ($paginaAtual > 1): ?>
+                        <a
+                            href="?pagina=<?php echo $paginaAtual - 1; ?>&cliente=<?php echo urlencode($filtroCliente); ?>&produto=<?php echo urlencode($filtroProduto); ?>&codigo=<?php echo urlencode($filtroCodigo); ?>&armario=<?php echo urlencode($filtroArmario); ?>">
+                            ◀ Anterior
+                        </a>
+                    <?php else: ?>
+                        <a class="disabled">◀ Anterior</a>
+                    <?php endif; ?>
 
-                <span class="page-info">
-                    Página <strong><?php echo $paginaAtual; ?></strong> de <strong><?php echo $totalPaginas; ?></strong>
-                </span>
+                    <span class="page-info">
+                        Página <strong><?php echo $paginaAtual; ?></strong> de <strong><?php echo $totalPaginas; ?></strong>
+                    </span>
 
-                <?php if ($paginaAtual < $totalPaginas): ?>
-                    <a href="?pagina=<?php echo $paginaAtual + 1; ?>&cliente=<?php echo urlencode($filtroCliente); ?>&produto=<?php echo urlencode($filtroProduto); ?>&codigo=<?php echo urlencode($filtroCodigo); ?>&armario=<?php echo urlencode($filtroArmario); ?>">
-                        Próxima ▶
-                    </a>
-                <?php else: ?>
-                    <a class="disabled">Próxima ▶</a>
-                <?php endif; ?>
-            </div>
+                    <?php if ($paginaAtual < $totalPaginas): ?>
+                        <a
+                            href="?pagina=<?php echo $paginaAtual + 1; ?>&cliente=<?php echo urlencode($filtroCliente); ?>&produto=<?php echo urlencode($filtroProduto); ?>&codigo=<?php echo urlencode($filtroCodigo); ?>&armario=<?php echo urlencode($filtroArmario); ?>">
+                            Próxima ▶
+                        </a>
+                    <?php else: ?>
+                        <a class="disabled">Próxima ▶</a>
+                    <?php endif; ?>
+                </div>
             <?php endif; ?>
         </div>
     </div>
 
     <script>
-        // Função para voltar
         function voltarPagina() {
             window.location.href = '../principal.php';
         }
 
-        // Função para novo cadastro
         function novoCadastro() {
             window.location.href = 'cad_clicheria.php';
         }
 
-        // Função para limpar filtros
         function limparFiltros() {
             window.location.href = 'listar_cliches.php';
         }
 
-        // Função para excluir clichê
         function excluirCliche(id, cliente) {
             if (confirm(`⚠️ ATENÇÃO!\n\nTem certeza que deseja EXCLUIR o clichê do cliente "${cliente}"?\n\nEsta ação não poderá ser desfeita!`)) {
-                // Redireciona para o script de exclusão
                 window.location.href = `excluir_cliche.php?id_cliche=${id}`;
             }
         }
     </script>
 </body>
+
 </html>

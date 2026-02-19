@@ -13,7 +13,7 @@ if (!isset($_GET['id_cliche']) || empty($_GET['id_cliche'])) {
 $id = (int)$_GET['id_cliche'];
 
 // Verifica se o registro existe antes de excluir
-$sqlVerifica = "SELECT cliente, produto FROM tab_clicheria WHERE id_cliche = ?";
+$sqlVerifica = "SELECT cliente, produto FROM tab_nova_clicheria WHERE id_cliche = ?";
 $stmtVerifica = $conn->prepare($sqlVerifica);
 $stmtVerifica->bind_param("i", $id);
 $stmtVerifica->execute();
@@ -33,7 +33,7 @@ $dados = $resultVerifica->fetch_assoc();
 $stmtVerifica->close();
 
 // Executa a exclusão
-$sql = "DELETE FROM tab_clicheria WHERE id_cliche = ?";
+$sql = "DELETE FROM tab_nova_clicheria WHERE id_cliche = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
 

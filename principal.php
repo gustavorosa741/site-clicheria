@@ -58,7 +58,7 @@
                         </li>
                         <li class="menu-item">
                             <button class="menu-button" data-page="colagem/listar_colagens.php">
-                                Relatório Colagem
+                                Colagens Cadastradas
                             </button>
                         </li>
                     </ul>

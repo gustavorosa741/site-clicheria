@@ -13,7 +13,7 @@ if (!isset($_GET['id_cliche']) || empty($_GET['id_cliche'])) {
 $id = (int) $_GET['id_cliche'];
 
 // Busca os dados completos do clichê
-$sql = "SELECT * FROM tab_clicheria WHERE id_cliche = ?";
+$sql = "SELECT * FROM tab_nova_clicheria WHERE id_cliche = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
 $stmt->execute();

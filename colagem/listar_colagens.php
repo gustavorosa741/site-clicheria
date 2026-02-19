@@ -677,7 +677,7 @@ $conn->close();
         }
 
         function novoCadastro() {
-            window.location.href = 'cadastro-colagem-final.php';
+            window.location.href = '/colagem/cad_colagem.php';
         }
 
         function limparFiltros() {

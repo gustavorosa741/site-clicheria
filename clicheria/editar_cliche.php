@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $observacao = $_POST["observacao"];
     $camisa = $_POST["camisa"];
 
-    $sql = "UPDATE tab_clicheria SET 
+    $sql = "UPDATE tab_nova_clicheria SET 
             cliente = ?, produto = ?, codigo = ?, armario = ?, prateleira = ?, cores = ?,
             cor01 = ?, cor02 = ?, cor03 = ?, cor04 = ?, cor05 = ?, cor06 = ?, cor07 = ?, cor08 = ?, cor09 = ?, cor10 = ?,
             gravacao01 = ?, gravacao02 = ?, gravacao03 = ?, gravacao04 = ?, gravacao05 = ?, gravacao06 = ?, gravacao07 = ?, gravacao08 = ?, gravacao09 = ?, gravacao10 = ?,
@@ -119,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Buscar dados do clichê
-$sql = "SELECT * FROM tab_clicheria WHERE id_cliche = ?";
+$sql = "SELECT * FROM tab_nova_clicheria WHERE id_cliche = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
 $stmt->execute();

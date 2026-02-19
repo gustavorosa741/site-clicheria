@@ -29,9 +29,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $distanciaCameron2 = $_POST['distanciaCameron2'] ?? 0;
     $observacoes = $_POST['observacoes'] ?? null;
     $colador = $_POST['colador'] ?? '';
-    $datacolagem = $_POST['datacolagem'] ?? null;
+    // Validar e tratar data corretamente
+    if (isset($_POST['datacolagem']) && $_POST['datacolagem'] !== '') {
+        $datacolagem = $_POST['datacolagem'];
+    } else {
+        $datacolagem = null;
+    }
     $cores = $_POST['cores'] ?? 0;
-    
+
     // Cores, densidades e fornecedores (até 10)
     $cor01 = $_POST['cor01'] ?? null;
     $cor02 = $_POST['cor02'] ?? null;
@@ -43,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cor08 = $_POST['cor08'] ?? null;
     $cor09 = $_POST['cor09'] ?? null;
     $cor10 = $_POST['cor10'] ?? null;
-    
+
     $densidade01 = $_POST['densidade01'] ?? null;
     $densidade02 = $_POST['densidade02'] ?? null;
     $densidade03 = $_POST['densidade03'] ?? null;
@@ -54,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $densidade08 = $_POST['densidade08'] ?? null;
     $densidade09 = $_POST['densidade09'] ?? null;
     $densidade10 = $_POST['densidade10'] ?? null;
-    
+
     $fornecedor01 = $_POST['fornecedor01'] ?? null;
     $fornecedor02 = $_POST['fornecedor02'] ?? null;
     $fornecedor03 = $_POST['fornecedor03'] ?? null;
@@ -65,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fornecedor08 = $_POST['fornecedor08'] ?? null;
     $fornecedor09 = $_POST['fornecedor09'] ?? null;
     $fornecedor10 = $_POST['fornecedor10'] ?? null;
-    
+
     $sql = "UPDATE tab_nova_colagem SET 
             produto = ?, codigo = ?, camisa = ?, valor_eng = ?, maquina = ?, valor_pon = ?, familia = ?,
             cameron = ?, distanciaCameron = ?, engcameron = ?, maquinaCameron = ?, ponCameron = ?,
@@ -76,27 +81,69 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             fornecedor01 = ?, fornecedor02 = ?, fornecedor03 = ?, fornecedor04 = ?, fornecedor05 = ?,
             fornecedor06 = ?, fornecedor07 = ?, fornecedor08 = ?, fornecedor09 = ?, fornecedor10 = ?
             WHERE id_colagem = ?";
-    
+
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param(
-        "siiisisiiisisisissssssssssssssssssssssssssssssssi",
-        $produto, $codigo, $camisa, $valor_eng, $maquina, $valor_pon, $familia,
-        $cameron, $distanciaCameron, $engcameron, $maquinaCameron, $ponCameron,
-        $distanciaCameron2, $observacoes, $colador, $datacolagem, $cores,
-        $cor01, $cor02, $cor03, $cor04, $cor05, $cor06, $cor07, $cor08, $cor09, $cor10,
-        $densidade01, $densidade02, $densidade03, $densidade04, $densidade05,
-        $densidade06, $densidade07, $densidade08, $densidade09, $densidade10,
-        $fornecedor01, $fornecedor02, $fornecedor03, $fornecedor04, $fornecedor05,
-        $fornecedor06, $fornecedor07, $fornecedor08, $fornecedor09, $fornecedor10,
+    $params = [
+        $produto,
+        $codigo,
+        $camisa,
+        $valor_eng,
+        $maquina,
+        $valor_pon,
+        $familia,
+        $cameron,
+        $distanciaCameron,
+        $engcameron,
+        $maquinaCameron,
+        $ponCameron,
+        $distanciaCameron2,
+        $observacoes,
+        $colador,
+        $datacolagem,
+        $cores,
+        $cor01,
+        $cor02,
+        $cor03,
+        $cor04,
+        $cor05,
+        $cor06,
+        $cor07,
+        $cor08,
+        $cor09,
+        $cor10,
+        $densidade01,
+        $densidade02,
+        $densidade03,
+        $densidade04,
+        $densidade05,
+        $densidade06,
+        $densidade07,
+        $densidade08,
+        $densidade09,
+        $densidade10,
+        $fornecedor01,
+        $fornecedor02,
+        $fornecedor03,
+        $fornecedor04,
+        $fornecedor05,
+        $fornecedor06,
+        $fornecedor07,
+        $fornecedor08,
+        $fornecedor09,
+        $fornecedor10,
         $id
-    );
-    
+    ];
+
+    $types = str_repeat("s", count($params));
+
+    $stmt->bind_param($types, ...$params);
+
     if ($stmt->execute()) {
         echo "<script>alert('✅ Colagem atualizada com sucesso!'); window.location.href='listar_colagens.php';</script>";
     } else {
         echo "<script>alert('❌ Erro ao atualizar colagem: " . $stmt->error . "');</script>";
     }
-    
+
     $stmt->close();
 }
 
@@ -526,15 +573,18 @@ $conn->close();
                     <div class="form-grid">
                         <div class="form-group span-2">
                             <label for="produto">Produto *</label>
-                            <input type="text" id="produto" name="produto" value="<?php echo htmlspecialchars($colagem['produto']); ?>" required>
+                            <input type="text" id="produto" name="produto"
+                                value="<?php echo htmlspecialchars($colagem['produto']); ?>" required>
                         </div>
                         <div class="form-group">
                             <label for="codigo">Código *</label>
-                            <input type="number" id="codigo" name="codigo" value="<?php echo htmlspecialchars($colagem['codigo']); ?>" required>
+                            <input type="number" id="codigo" name="codigo"
+                                value="<?php echo htmlspecialchars($colagem['codigo']); ?>" required>
                         </div>
                         <div class="form-group">
                             <label for="camisa">Camisa *</label>
-                            <input type="number" id="camisa" name="camisa" value="<?php echo htmlspecialchars($colagem['camisa']); ?>" required>
+                            <input type="number" id="camisa" name="camisa"
+                                value="<?php echo htmlspecialchars($colagem['camisa']); ?>" required>
                         </div>
                         <div class="form-group">
                             <label for="familia">Família *</label>
@@ -560,11 +610,13 @@ $conn->close();
                         </div>
                         <div class="form-group">
                             <label for="datacolagem">Data da Colagem</label>
-                            <input type="date" id="datacolagem" name="datacolagem" value="<?php echo htmlspecialchars($colagem['datacolagem']); ?>">
+                            <input type="date" id="datacolagem" name="datacolagem" required
+                                value="<?php echo htmlspecialchars($colagem['datacolagem']); ?>">
                         </div>
                         <div class="form-group">
                             <label for="numCores">Nº de Cores *</label>
-                            <input type="number" id="numCores" name="numCores" value="<?php echo htmlspecialchars($colagem['cores']); ?>" min="1" max="10" 
+                            <input type="number" id="numCores" name="numCores"
+                                value="<?php echo htmlspecialchars($colagem['cores']); ?>" min="1" max="10"
                                 oninput="validarNumero(this)" required>
                         </div>
                     </div>
@@ -587,11 +639,13 @@ $conn->close();
                         </div>
                         <div class="form-group span-2">
                             <label for="valor_eng">Valor ENG *</label>
-                            <input type="number" id="valor_eng" name="valor_eng" value="<?php echo htmlspecialchars($colagem['valor_eng']); ?>" required>
+                            <input type="number" id="valor_eng" name="valor_eng"
+                                value="<?php echo htmlspecialchars($colagem['valor_eng']); ?>" required>
                         </div>
                         <div class="form-group span-2">
                             <label for="valor_pon">Valor PON *</label>
-                            <input type="number" id="valor_pon" name="valor_pon" value="<?php echo htmlspecialchars($colagem['valor_pon']); ?>" required>
+                            <input type="number" id="valor_pon" name="valor_pon"
+                                value="<?php echo htmlspecialchars($colagem['valor_pon']); ?>" required>
                         </div>
                     </div>
                 </div>
@@ -604,15 +658,18 @@ $conn->close();
                         <label for="cameron">Utiliza Cameron</label>
                     </div>
 
-                    <div id="cameronFields" class="cameron-section" style="display: <?php echo $colagem['cameron'] == 1 ? 'block' : 'none'; ?>;">
+                    <div id="cameronFields" class="cameron-section"
+                        style="display: <?php echo $colagem['cameron'] == 1 ? 'block' : 'none'; ?>;">
                         <div class="form-grid">
                             <div class="form-group span-2">
                                 <label for="distanciaCameron">Distância Cameron 1</label>
-                                <input type="number" id="distanciaCameron" name="distanciaCameron" value="<?php echo htmlspecialchars($colagem['distanciaCameron']); ?>">
+                                <input type="number" id="distanciaCameron" name="distanciaCameron"
+                                    value="<?php echo htmlspecialchars($colagem['distanciaCameron']); ?>">
                             </div>
                             <div class="form-group span-2">
                                 <label for="engcameron">ENG Cameron</label>
-                                <input type="number" id="engcameron" name="engcameron" value="<?php echo htmlspecialchars($colagem['engcameron']); ?>">
+                                <input type="number" id="engcameron" name="engcameron"
+                                    value="<?php echo htmlspecialchars($colagem['engcameron']); ?>">
                             </div>
                             <div class="form-group span-2">
                                 <label for="maquinaCameron">Máquina Cameron</label>
@@ -627,11 +684,13 @@ $conn->close();
                             </div>
                             <div class="form-group span-2">
                                 <label for="ponCameron">PON Cameron</label>
-                                <input type="number" id="ponCameron" name="ponCameron" value="<?php echo htmlspecialchars($colagem['ponCameron']); ?>">
+                                <input type="number" id="ponCameron" name="ponCameron"
+                                    value="<?php echo htmlspecialchars($colagem['ponCameron']); ?>">
                             </div>
                             <div class="form-group span-2">
                                 <label for="distanciaCameron2">Distância Cameron 2</label>
-                                <input type="number" id="distanciaCameron2" name="distanciaCameron2" value="<?php echo htmlspecialchars($colagem['distanciaCameron2']); ?>">
+                                <input type="number" id="distanciaCameron2" name="distanciaCameron2"
+                                    value="<?php echo htmlspecialchars($colagem['distanciaCameron2']); ?>">
                             </div>
                         </div>
                     </div>
@@ -662,7 +721,8 @@ $conn->close();
                     <div class="form-grid">
                         <div class="form-group span-6">
                             <label for="observacoes">Observações Adicionais</label>
-                            <textarea id="observacoes" name="observacoes" rows="3"><?php echo htmlspecialchars($colagem['observacoes']); ?></textarea>
+                            <textarea id="observacoes" name="observacoes"
+                                rows="3"><?php echo htmlspecialchars($colagem['observacoes']); ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -686,7 +746,7 @@ $conn->close();
         function toggleCameron() {
             const cameronCheckbox = document.getElementById('cameron');
             const cameronFields = document.getElementById('cameronFields');
-            
+
             if (cameronCheckbox.checked) {
                 cameronFields.style.display = 'block';
             } else {

@@ -3,7 +3,6 @@ include '../BD/conexao.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        // Receber dados do formulário
         $produto = $_POST['produto'] ?? '';
         $codigo = $_POST['codigo'] ?? 0;
         $camisa = $_POST['camisa'] ?? 0;
@@ -19,10 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $distanciaCameron2 = $_POST['distanciaCameron2'] ?? 0;
         $observacoes = $_POST['observacoes'] ?? null;
         $colador = $_POST['colador'] ?? '';
-        $datacolagem = $_POST['datacolagem'] ?? null;
+
+        // Validar e tratar data corretamente
+        if (isset($_POST['datacolagem']) && $_POST['datacolagem'] !== '') {
+            $datacolagem = $_POST['datacolagem'];
+        } else {
+            $datacolagem = null;
+        }
+        echo "<pre>datacolagem final: " . var_export($datacolagem, true) . "</pre>";
         $cores = $_POST['cores'] ?? 0;
-        
-        // Cores, densidades e fornecedores (até 10)
+
         $cor01 = $_POST['cor01'] ?? null;
         $cor02 = $_POST['cor02'] ?? null;
         $cor03 = $_POST['cor03'] ?? null;
@@ -33,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cor08 = $_POST['cor08'] ?? null;
         $cor09 = $_POST['cor09'] ?? null;
         $cor10 = $_POST['cor10'] ?? null;
-        
+
         $densidade01 = $_POST['densidade01'] ?? null;
         $densidade02 = $_POST['densidade02'] ?? null;
         $densidade03 = $_POST['densidade03'] ?? null;
@@ -44,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $densidade08 = $_POST['densidade08'] ?? null;
         $densidade09 = $_POST['densidade09'] ?? null;
         $densidade10 = $_POST['densidade10'] ?? null;
-        
+
         $fornecedor01 = $_POST['fornecedor01'] ?? null;
         $fornecedor02 = $_POST['fornecedor02'] ?? null;
         $fornecedor03 = $_POST['fornecedor03'] ?? null;
@@ -55,17 +60,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fornecedor08 = $_POST['fornecedor08'] ?? null;
         $fornecedor09 = $_POST['fornecedor09'] ?? null;
         $fornecedor10 = $_POST['fornecedor10'] ?? null;
-        
+
         // Validações básicas
         if (empty($produto) || empty($codigo) || empty($camisa) || empty($maquina) || empty($familia) || empty($colador)) {
             throw new Exception('Campos obrigatórios não preenchidos!');
         }
-        
+
         if ($cores == 0) {
             throw new Exception('É necessário adicionar pelo menos uma cor!');
         }
-        
-        // Preparar SQL para inserção
+
         $sql = "INSERT INTO tab_nova_colagem (
             produto, codigo, camisa, valor_eng, maquina, valor_pon, familia, 
             cameron, distanciaCameron, engcameron, maquinaCameron, ponCameron, 
@@ -76,10 +80,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             fornecedor01, fornecedor02, fornecedor03, fornecedor04, fornecedor05,
             fornecedor06, fornecedor07, fornecedor08, fornecedor09, fornecedor10
         ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        
+
         $stmt = $conn->prepare($sql);
         $stmt->bind_param(
-            "siiisisiiisisisisssssssssssssssssssssssssssssss",
+            "siiisisiiisisssssssssssssssssssssssssssssssssss",
             $produto, $codigo, $camisa, $valor_eng, $maquina, $valor_pon, $familia,
             $cameron, $distanciaCameron, $engcameron, $maquinaCameron, $ponCameron,
             $distanciaCameron2, $observacoes, $colador, $datacolagem, $cores,
@@ -89,16 +93,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $fornecedor01, $fornecedor02, $fornecedor03, $fornecedor04, $fornecedor05,
             $fornecedor06, $fornecedor07, $fornecedor08, $fornecedor09, $fornecedor10
         );
-        
+
         if ($stmt->execute()) {
             echo "<script>alert('Colagem cadastrada com sucesso!'); window.location.href='../principal.php';</script>";
         } else {
             throw new Exception('Erro ao executar a inserção no banco de dados.');
         }
-        
+
         $stmt->close();
         $conn->close();
-        
+
     } catch (Exception $e) {
         echo "<script>alert('Erro ao salvar colagem: " . $e->getMessage() . "');</script>";
     }
@@ -551,7 +555,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div class="form-group">
                             <label for="numCores">Nº de Cores <span class="required">*</span></label>
-                            <input type="number" id="numCores" name="numCores" value="1" min="1" max="10" 
+                            <input type="number" id="numCores" name="numCores" value="1" min="1" max="10"
                                 oninput="validarNumero(this)" required>
                         </div>
                     </div>
@@ -649,7 +653,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-grid">
                         <div class="form-group span-6">
                             <label for="observacoes">Observações Adicionais</label>
-                            <textarea id="observacoes" name="observacoes" rows="3" 
+                            <textarea id="observacoes" name="observacoes" rows="3"
                                 placeholder="Digite aqui observações relevantes sobre a colagem..."></textarea>
                         </div>
                     </div>
@@ -670,7 +674,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         function toggleCameron() {
             const cameronCheckbox = document.getElementById('cameron');
             const cameronFields = document.getElementById('cameronFields');
-            
+
             if (cameronCheckbox.checked) {
                 cameronFields.style.display = 'block';
             } else {
@@ -743,4 +747,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         window.addEventListener('DOMContentLoaded', gerarTabelaCores);
     </script>
 </body>
+
 </html>

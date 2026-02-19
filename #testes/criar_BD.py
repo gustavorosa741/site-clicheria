@@ -17,7 +17,7 @@ Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
 
-'''class CadastroClicheria(Base):
+class CadastroClicheria(Base):
     __tablename__ = 'tab_nova_clicheria'
     id_cliche = Column(Integer, primary_key=True)
     cliente = Column(String(200), nullable=False)
@@ -57,7 +57,7 @@ session = Session()
     reserva09 = Column(Boolean)
     reserva10 = Column(Boolean)
     observacao = Column(String(200), nullable=False)
-    camisa = Column(String(200), nullable=False)'''
+    camisa = Column(String(200), nullable=False)
 
 
 
@@ -79,7 +79,7 @@ class CadastroColagem(Base):
     distanciaCameron2 = Column(Integer, nullable=False)
     observacoes = Column(String(200))
     colador = Column(String(200), nullable=False)
-    datacolagem = Column (Date)
+    datacolagem = Column(Date)
 
     cores =Column(Integer, nullable=False)
     cor01 = Column(String(50))

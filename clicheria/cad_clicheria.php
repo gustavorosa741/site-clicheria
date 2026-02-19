@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $observacao = $_POST["observacao"];
     $camisa = $_POST["camisa"];
 
-    $sql = "INSERT INTO tab_clicheria (cliente, produto, codigo, armario, prateleira, cores, cor01, cor02, cor03, cor04, cor05, cor06, cor07, cor08, cor09, cor10, 
+    $sql = "INSERT INTO tab_nova_clicheria (cliente, produto, codigo, armario, prateleira, cores, cor01, cor02, cor03, cor04, cor05, cor06, cor07, cor08, cor09, cor10, 
     gravacao01, gravacao02, gravacao03, gravacao04, gravacao05, gravacao06, gravacao07, gravacao08, gravacao09, gravacao10, 
     reserva01, reserva02, reserva03, reserva04, reserva05, reserva06, reserva07, reserva08, reserva09, reserva10, observacao, camisa) 
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -503,32 +503,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="form-grid">
                         <div class="form-group span-2">
                             <label for="cliente">Cliente *</label>
-                            <input type="text" id="cliente" name="cliente" value="teste" required>
+                            <input type="text" id="cliente" name="cliente" required>
                         </div>
                         <div class="form-group span-2">
                             <label for="produto">Produto *</label>
-                            <input type="text" id="produto" name="produto" value="teste" required>
+                            <input type="text" id="produto" name="produto" required>
                         </div>
                         <div class="form-group">
                             <label for="codigo">Código *</label>
-                            <input type="number" pattern="[0-9]+" id="codigo" name="codigo" value="1" required>
+                            <input type="number" pattern="[0-9]+" id="codigo" name="codigo" required>
                         </div>
                         <div class="form-group">
                             <label for="cores">Nº de Cores *</label>
-                            <input type="number" id="cores" name="cores" value="10" min="1" max="10"
+                            <input type="number" id="cores" name="cores" value="1" min="1" max="10"
                                 oninput="validarNumero(this)" required>
                         </div>
                         <div class="form-group">
                             <label for="armario">Armário</label>
-                            <input type="text" id="armario" name="armario" value="1" required>
+                            <input type="text" id="armario" name="armario" required>
                         </div>
                         <div class="form-group">
                             <label for="prateleira">Prateleira</label>
-                            <input type="text" id="prateleira" name="prateleira" value="12" required>
+                            <input type="text" id="prateleira" name="prateleira" required>
                         </div>
                         <div class="form-group span-2">
                             <label for="camisa">Camisa</label>
-                            <input type="text" id="camisa" name="camisa" value="teste" required>
+                            <input type="text" id="camisa" name="camisa" required>
                         </div>
                         <div class="form-group span-2">
                             <label for="observacoes">Observações</label>
@@ -581,13 +581,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 tr.innerHTML = `
             <td class="cor-numero" data-label="">Cor ${corNum}</td>
             <td data-label="Nome da Cor">
-                <input type="text" id="cor${corNum}" name="cor${corNum}" value="teste" placeholder="Nome da cor">
+                <input type="text" id="cor${corNum}" name="cor${corNum}" required placeholder="Nome da cor">
             </td>
             <td data-label="Data de Gravação">
-                <input type="date" id="gravacao${corNum}" name="gravacao${corNum}" value="2025-01-01" placeholder="dd/mm/aaaa">
+                <input type="date" id="gravacao${corNum}" name="gravacao${corNum}" required placeholder="dd/mm/aaaa">
             </td>
             <td class="checkbox-cell" data-label="Reserva">
-                <input type="checkbox" id="reserva${corNum}" name="reserva${corNum}" value="0">
+                <input type="checkbox" id="reserva${corNum}" name="reserva${corNum}">
             </td>
         `;
                 tbody.appendChild(tr);
